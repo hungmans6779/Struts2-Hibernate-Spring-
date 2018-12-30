@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<!-- 
+  《非欄位驗證器》設定風格  
+  
+  《字串長度驗證器》：要求被驗證欄位必須滿足指定的長度範圍，否則驗證失敗 。
+    fieldname：用來指定被驗證的 Action 屬性，如果採用攔位驗證器設定風格，則無須指定參數。
+    minLength：可選參數，用來指定字串的最小長度。
+    maxLength：可選參數，用來指定字串的最大長度。
+    
+   
+    
+   《整數驗證器》：要求被驗證的整數在指定整數範圍內，否則驗證失敗 。
+    fieldname：用來指定被驗證的 Action 屬性，如果採用攔位驗證器設定風格，則無須指定參數。
+    min：可選參數，用來指定字串的最小整數值。
+    max：可選參數，用來指定字串的最大整數值。    
+    
+   
+ 
+   《日期驗證器》    ：日期驗證器的名字為 date，此驗證器要求被驗證的日期欄位值必須在指定範圍內，否則驗證失敗。
+    fieldname：用來指定被驗證的 Action 屬性，如果採用攔位驗證器設定風格，則無須指定參數。
+    min：可選參數，用來指定被驗證日期的最大值。
+    max：可選參數，用來指定被驗證日期的最小值。
+    
+    
+    
+   《郵寄地址驗證器》：要求指定欄位必須滿足郵寄地址規則，這個規則基於正則運算式。
+   
+   
+   
+   《規則運算式驗證器》：正則運算式驗證器的名字為 regex，使用正則運算式驗證一個字串欄位。
+    fieldname    ：用來指定被驗證的 Action 屬性，如果採用攔位驗證器設定風格，則無須指定參數。
+    expression   ：必選參數，正則運算式。
+    caseSensitive：可選參數，表示設定運算式比對時是否有大小。
+    
+-->
+
+
+<validators>
+  
+  <!-- 
+  《欄位驗證器》設定風格
+  <field name="被驗證的欄位" >
+    <field-validator type="驗證器型態名" >
+      <param name="參數名" >參數值</param>
+      <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+    </field-validator>
+  </field>
+  -->
+  
+  <!-- 
+   《非欄位驗證器》設定風格
+    <validator type="驗證器型態名" >
+       <param name="fieldName" >需要被驗證的欄位</param>
+       <param name="參數名" >參數值</param>
+       <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+    </validator>
+  -->
+
+
+
+  <!-- 使用者名稱 -->
+  <field name="userName" >                     
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>        <!-- 檢查時去掉前後空白 -->
+      <message key="register.userName" />     <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+    <field-validator type="stringlength" >    <!-- 定義驗證型態為 stringlength  -->
+      <param name="minLength" >5</param>
+      <param name="maxLength" >15</param>
+      <message key="register.userNameLen" />
+    </field-validator>
+  </field>   
+  
+  
+  
+  <!-- 使用者密碼 -->
+  <field name="userPassword" >
+    <field-validator type="requiredstring" >   <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>         <!-- 檢查時去掉前後空白 -->
+      <message key="register.userPassword" />  <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+    <field-validator type="stringlength" >     <!-- 定義驗證型態為 stringlength  -->
+      <param name="minLength" >8</param>
+      <param name="maxLength" >16</param>
+      <message key="register.userPasswordLen" />
+    </field-validator>
+    <field-validator type="fieldexpression" >
+      <param name="expression" ><![CDATA[(userPassword==ruserPassword)]]></param>
+      <message key="register.userPasswordRepeat" />
+    </field-validator>
+  </field>
+  
+  
+  
+  <!-- 生日 -->
+  <field name="userBirthday" >
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>        <!-- 檢查時去掉前後空白 -->
+      <message key="register.userBirthday" /> <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+    <field-validator type="date" >         
+      <param name="trim" >true</param>     
+      <param name="min" >1920-12-30</param>
+      <param name="max" >2013-03-04</param>
+      <message key="register.userBirthdayRang" />
+    </field-validator>
+  </field>
+  
+  
+  
+  <!-- 電話 -->
+  <field name="userTelephone" >
+    <field-validator type="requiredstring" >    <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>          <!-- 檢查時去掉前後空白 -->
+      <message key="register.userTelephone" />  <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+  </field>
+  
+  
+  
+  
+  <!-- 電子郵件 -->
+  <field name="userEmail" >
+    <field-validator type="requiredstring" >    <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>          <!-- 檢查時去掉前後空白 -->
+      <message key="register.userEmail" />      <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+    <field-validator type="email" >             <!-- 定義驗證型態為 email  -->
+      <message key="register.userEmailFmt" />  
+    </field-validator>
+  </field>
+  
+  
+  
+  
+  <!-- 地址 -->
+  <field name="userAddress" >
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>        <!-- 檢查時去掉前後空白 -->
+      <message key="register.userAddress" />  <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+  </field>
+  
+  
+  
+  
+  <!-- 簡介 -->
+  <field name="userRemark" >
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>        <!-- 檢查時去掉前後空白 -->
+      <message key="register.userRemark" />   <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+  </field>
+  
+  
+  
+</validators>

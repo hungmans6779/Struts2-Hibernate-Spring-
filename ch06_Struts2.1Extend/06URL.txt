@@ -1,0 +1,59 @@
+   第 六 章  Struts2.x 擴充與高級技巧
+
+
+       介紹了 Struts2.x 的國際化和例外處理，這在成熟完善的 Web 應用系統中是不可或缺的部份。能熟悉 Struts2.x 國際化和宣告例外處理機制，
+   從而開發出成熟完善的 Web 應用系統。
+       另外在 Struts2.x 的標籤程式庫中使用了 OGNL 運算式，對集合和物件存取功能非常強大。而對於專案開發中常用的檔案上傳和下載功能，
+   Struts2.x 提供了相應的 Common-FileUpload 檔案上傳  Framework 和 下載攔截器。
+   
+       國際化主是指語言的國際化，目的是提供一個語言自我調整、顯示更友善的使用者介面，掃除語言障礙，
+   使不同地區和使用不同的使用者都能方便使用同一個應用系統。   
+   
+   
+             
+   
+  《使用者登錄頁面(i18n)》：載入全域範圍資料檔(把xxx.property 放到 src 的目錄下)，並設定 struts.xml 的常數:struts.custom.i18n.resources。
+   http://3w.eztravel.com.tw:8080/ch06_Struts2.1Extend/form/login.jsp
+
+   
+   
+  《使用者登錄頁面(i18n)》：載入臨時指定範圍資料檔(把xxx.property 放到 src 的目錄下)。
+                            採用這種方式，國際資源檔的存放位置和命名規則與載入全域範圍國際化資源檔的方式相同，
+                            不同的是，採用此種方式時，可以使用 i18n 標籤臨時動態地設定國際化資源檔。
+                            在<struts:i18n >標籤中定義 name 屬性，用來指定國際化資源檔名字中自訂的部份，該標籤要作為其他標籤的父標籤使用。
+   http://3w.eztravel.com.tw:8080/ch06_Struts2.1Extend/form/login_temp.jsp
+   
+   
+   
+   
+  《實現自由選擇語言環境》：很多完善的網站系統中，通常會提供一個下拉式清單方塊讓使用者自行選擇語言環系。
+   http://3w.eztravel.com.tw:8080/ch06_Struts2.1Extend/ch06ExtendNS/choose.action
+   
+   
+   
+  
+  《應用中的例外》：Struts2.x ，用戶端發送一個請求後會在 Action 中進行處理，在 Action 業務處理過程中，
+                    如果出現例外，一個名稱為 exception 的攔截器將攔截該例外並進行處理，然後轉到相應的檢視回饋給使用者。
+   http://3w.eztravel.com.tw:8080/ch06_Struts2.1Extend/ch06ExtendNS/exception.action
+  
+  
+   
+   
+  《OGNL Object-Graph Navigation Lanuage 物件導向語言》。
+   http://3w.eztravel.com.tw:8080/ch06_Struts2.1Extend/ch06ExtendNS/ognl.action
+   
+   
+   
+   
+  《檔案上傳》：在 Struts2.x 中實現檔案上傳，需要註冊一個"上傳解析器"，開啟 struts.properties 設定檔，可以看到解析器的註冊程式碼。
+   http://3w.eztravel.com.tw:8080/ch06_Struts2.1Extend/form/uploadDownfile/up.jsp
+ 
+ 
+ 
+ 
+  《檔案下載》：。
+   http://3w.eztravel.com.tw:8080/ch06_Struts2.1Extend/form/uploadDownfile/down.jsp
+   
+   
+
+ 

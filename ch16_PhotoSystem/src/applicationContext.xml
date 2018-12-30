@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+ 
+  <!-- register 用登註冊 -->
+  <bean id="RegisterAction" class="com.framework.struts2.action.RegisterAction"
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+     <property name="userDao"   ref="userDao"    /> 
+     <property name="folderDao" ref="folderDao"  />
+  </bean>
+
+
+  <!-- login 用戶登入 -->
+  <bean id="LoginAction" class="com.framework.struts2.action.LoginAction" 
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+     <property name="userDao" ref="userDao" />
+  </bean>   
+ 
+ 
+  <!-- myFoldersAction 我的相冊 -->
+  <bean id="myFoldersAction" class="com.framework.struts2.action.MyFoldersAction"
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+    <property name="folderDao" ref="folderDao" />
+  </bean>   
+   
+  
+  <!-- newFolderAction 新增相簿 --> 
+  <bean id="newFolderAction" class="com.framework.struts2.action.NewFolderAction"
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+     <property name="folderDao" ref="folderDao" />
+  </bean>
+  
+  
+  <!-- PhotoesAction 某一相簿內的圖片展示 -->
+  <bean id="PhotoesAction" class="com.framework.struts2.action.PhotoesAction" 
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+    <property name="photoDao"  ref="photoDao"   />
+    <property name="folderDao" ref="folderDao"  />
+  </bean>
+  
+  
+  <!-- MyUpAction 上傳圖片 -->
+  <bean id="MyUpAction" class="com.framework.struts2.action.MyUpAction" 
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+    <property name="photoDao" ref="photoDao" />
+  </bean>
+  
+  
+  <!-- FolderNameAction  -->
+  <bean id="FolderNameAction" class="com.framework.struts2.action.FolderNameAction" 
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+    <property name="folderDao" ref="folderDao" />
+  </bean>
+  
+  
+  
+  <!-- DeleteFolderAction 刪除圖片資料匣 -->
+  <bean id="DeleteFolderAction" class="com.framework.struts2.action.DeleteFolderAction"
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+     <property name="folderDao" ref="folderDao" />
+  </bean>
+  
+     
+  <!-- DeletePicAction 刪除圖片 --> 
+  <bean id="DeletePicAction" class="com.framework.struts2.action.DeletePicAction"
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" scope="prototype" >
+     <property name="photoDao" ref="photoDao" />
+  </bean>
+  
+    
+</beans>

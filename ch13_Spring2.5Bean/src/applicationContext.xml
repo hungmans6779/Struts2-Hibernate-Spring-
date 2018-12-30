@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <!-- 
+    
+     Spring2.5 新特性
+     
+     XML Schema 的支援和自訂命名空間的使用大大減少了基於 XML 的設定。使用 Java 5 及更新版本的開發人員，可以利用植入了像 泛型和註釋等新語言特性的 Spring庫。
+     最近，和 AspectJ 運算式語言的緊密整合，使得以非侵入方式增加跨越定義良好的 Spring 管理物件分組的行為成為可能。
+     
+     Spring 2.5 新特性主要表示在如下幾點：
+     ◆ 全面支援 Java 6 和 Java EE 5 (JDBC 4.0、JTA 1.1、JavaMail 1.4、JAX-WS 2.0 等)。
+     ◆ 新特性的註釋驅動相依植入，包括對限定詞的定義。 
+     ◆ 支援基於 classpath 的元件掃描，自動偵測有註釋的類別。
+     ◆ 支援 AspectJ 剖面運算式中包含 Bean name 剖面元素。
+     ◆ 內建 AspectJ 載入時編織，基於 LoadTimeWeaver 分析。
+     ◆ 更多的 XML 設定檔的命名空間支援，例如 Context 和 JMS 等，可最大程度地提昇撰寫的方便性。
+     ◆ 全面修訂整合測試 Framework ，支援 JUnit 4 和 TestNG。
+     ◆ 新的基於註釋的 ServletMVC 和 Portlet MVC 控制器風格設定。    
+     ◆ 擴充了 SimpleJdbcTemplate 功能，支援具名引數等。
+     ◆ 官方認可的 WebSphere 支援，支援 WebSphere 6 UOWManager 機制。
+     ◆ Spring Framework 的 jar 檔案，相容 OSGi 綁定，並能直接使用。
+     ◆ Spring ApplicationContext 可被部署為 JCA RAR 檔案，用於非主導應用模組。    
+     ◆ JCA 1.5 訊息終端管理，用於 Spring 管理的 JMS 和 CCI 訊息監聽器。
+     ◆ 基於註釋的 MVC 控制器風格， JAX-WS 支援和 TestNG 支援。    
+     
+     
+     
+     Spring Framwork 的7個模組
+     ● 核心容器(Core)：核心容器提供 Spring Framework 的基本功能。主要元件是 BeanFactory，是工廠模式的實現，
+                        使用 IoC 模式將應用程式的設定和相依性標準與實際的應用程式碼分開。
+     ● Spring 上下文 Spring 上下立是一個設定檔，向 Spring Framework 提供上下文資訊。這些上下文包括企業服務，
+                                                 例如 JNDI、EJB、電子郵件、國際化、驗證和排程功能。
+     ● AOP 透過設定管理特性，該模組直接將剖面導向的程式設計功能整合到 Spring Framework 中。
+                              所以，可以很容易地使 Spring Framework 管理的任何物件支援 AOP。
+                              AOP 模組為基於 Spring 的應用程式中的物件提供了交易管理服務。
+                              透過使用 AOP ，不用相依於 EJB 元件，就可以將宣告性交易管理整合到應用程式中。
+     ● Spring DAO：JDBC DAO 抽象層提供了有意義的例外階層結構，可以使用該結構來管理例外處理和不同資料庫供應商拋出的錯誤訊息。
+                    例外階層結構簡化了錯誤處理，並且極大地降低了需要撰寫的例外程式碼數量(例如開啟和關閉連接)。
+                    Spring DAO 面對 JDBC 的例外遵從從通用的 DAO 例外階層結構。
+     ● ORM：Spring Framework 插入了許多個 ORMFramework，從而提供了 ORM 的物件關係工具，其中包括 JDO、Hibernate 和 iBatis SQL Map。
+             所有這些都遵從 Spring 的通用交易和 DAO 例外階層結構。
+     ● Web 上下文：Web 上下文模組建立在應用程式上下文模組之上，為基於 Web 的應用程式提供了上下文。所以，Spring Framework 支援與 Jakarta Struts 的整合。
+                    該模組還簡化了處理大部份請求以及將請求參數綁定到域物件的工作。
+     ● MVC Framework：MVC Framework 是一個全功能的建構 Web 應用程式的 MVC 實現。透過策略介面， MVCFramework 變成為高度可設定的，
+                       容納了大量檢視技術，其中包括 JSP、Velocity、Tiles、iText 和 POI。                       
+  -->
+  
+  
+  <bean id="chinese"  class="com.spring.service.impl.Chinese" />
+  <bean id="american" class="com.spring.service.impl.American" />
+  
+ 
+</beans>

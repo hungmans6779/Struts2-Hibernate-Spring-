@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+  
+  <!-- 
+  《欄位驗證器》設定風格
+  <field name="被驗證的欄位" >
+    <field-validator type="驗證器型態名" >
+      <param name="參數名" >參數值</param>
+      <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+    </field-validator>
+  </field>
+  -->
+  
+  <!-- 
+   《非欄位驗證器》設定風格
+    <validator type="驗證器型態名" >
+       <param name="fieldName" >需要被驗證的欄位</param>
+       <param name="參數名" >參數值</param>
+       <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+    </validator>
+  -->
+
+
+
+  <!-- 使用者名稱 -->
+  <field name="userName" >                     
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>        <!-- 檢查時去掉前後空白 -->
+      <message key="register.userName" />     <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+    <field-validator type="stringlength" >    <!-- 定義驗證型態為 stringlength  -->
+      <param name="minLength" >5</param>
+      <param name="maxLength" >15</param>
+      <message key="register.userNameLen" />
+    </field-validator>
+  </field>   
+  
+  
+  
+  <!-- 使用者密碼 -->
+  <field name="userPassword" >
+    <field-validator type="requiredstring" >   <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>         <!-- 檢查時去掉前後空白 -->
+      <message key="register.userPassword" />  <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+    <field-validator type="stringlength" >     <!-- 定義驗證型態為 stringlength  -->
+      <param name="minLength" >8</param>
+      <param name="maxLength" >16</param>
+      <message key="register.userPasswordLen" />
+    </field-validator>
+  </field>
+  
+  
+ 
+  
+</validators>

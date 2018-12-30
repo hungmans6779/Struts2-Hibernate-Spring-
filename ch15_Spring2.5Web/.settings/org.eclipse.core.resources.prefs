@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/jsp/tiles/blank.jsp=UTF-8
+encoding//src/com/spring/mvc/handler/multiAction/UserMultiActionController.java=UTF-8
+encoding//src/com/spring/mvc/handler/wizardForm/UserRegWizardFormController.java=UTF-8

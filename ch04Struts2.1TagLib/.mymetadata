@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="ch04Struts2.1TagLib"
+  id="myeclipse.1353394336422"
+  context-root="/ch04Struts2.1TagLib"
+  j2ee-spec="5.0"
+  archive="ch04Struts2.1TagLib.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

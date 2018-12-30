@@ -1,0 +1,20 @@
+/*	全局定義　*/
+body,td,div,p{
+  color:#1A438E;
+  font:normal 12px/20px Tahoma,Verdana,sans-serif;
+}
+
+p{
+  margin:0px; 
+  padding:0px;
+}
+
+body{ 
+  margin:0; 
+  padding:0px;
+  background-image: url('/ch07_Struts2.1Sreg/images/bg.gif');
+}
+
+
+
+

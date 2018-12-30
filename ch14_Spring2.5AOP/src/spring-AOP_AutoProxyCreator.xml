@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+  <!-- 
+     自動代理
+     有很多類別需要通知時，顯式地建立每個代理就顯得麻煩。然而 Spring 提供了自動代理機制，可以讓容器自動產生代理，
+     把開發人員從繁瑣的設定工作中解放出來。
+     
+     在 Spring 中，使用 BeanPostProcessor 可以完成自動代理工作，基於它的自動代理建立器的實現類別，根據一些規則自動在容器產生實體 Bean 時為比對的 Bean 
+     產生代理實例。代理建立器主要有以下3種類別。
+     
+     ★ 基於 Bean 設定名規則的自動代理建立器：允許為一組特定設定名的 Bean 自動建立代理實例的代理建立器，實現類別為 BeanNameAutoProxyCreator。
+     
+     ★ 基於 Advisor 比對機制的自動代理建立器：它會對容器中所有的 Advisor 進行掃描，自動將這些剖面應用到比對的Bean 中(即為目標 Bean 建立代理實例)，
+                                                實現類別為 DefaultAdvisorAutoProxyCreator。
+    
+     ★ 基於 Bean 中 AspectJ 註釋的自動代理建立器：為包含 AspectJ 註釋的 Bean 自動建立代理實例，實現類別為 AnnotationAwareAspectJAutoProxyCreator。
+  -->
+
+  <!-- 前置通知 -->
+  <bean id="greetingBeforeAdvice" class="aop.autoProxy.advice.GreetingBeforeAdvice" />
+  
+  <!-- 定義被代理 Bean -->
+  <bean id="receptionA" class="aop.autoProxy.service.impl.ConcreteReception" />
+  
+  <!--  基於 Bean 設定名規則的自動代理建立器：允許為一組特定設定名的 Bean 自動建立代理實例的代理建立器，實現類別為 BeanNameAutoProxyCreator  -->
+  <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator" >
+   
+    <!-- 指定被代理 Bean  -->
+    <property name="interceptorNames" >
+      <idref local="greetingBeforeAdvice" />  <!-- 指定通知  -->
+    </property>
+    
+    <!-- 
+    <property name="beanNames" value="reception*" />
+    -->
+    <property name="beanNames" >
+      <list>
+        <value>reception*</value>  <!-- 指定被代理的 Bean  -->
+      </list>
+    </property>
+   
+  </bean> 
+  
+  
+
+</beans>

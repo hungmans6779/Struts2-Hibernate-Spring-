@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <!-- 
+
+    ※ 設定資訊的分離 PropertyPlaceholderConfigurer
+    
+    PropertyPlaceholderConfigurer 是 BeanFactoryPostProcessor 的實現類別，用於讀取 Java Properties 檔案中的屬性，
+    然後插入 BeanFactory 定義中。透過使用 PropertyPlaceholderConfigurer ，可以將 Spring 設定檔的某些屬性放入屬性檔案中設定，
+    從而可以修改屬性檔案。而修改 Spring 設定時，無須修改 BeanFactory 的主 XML 定義檔案(例如，資料庫的URL、使用者名稱、密碼...)
+    
+    
+    ※ 注意事項： PropertyPlaceholderConfigurer  在 Spring IoC 容器中 只能存在一組
+    
+  -->	
+	
+   
+  <bean id="propertyConfigurer01" class="org.springframework.beans.factory.config.PropertyOverrideConfigurer" >
+    <property name="location" value="classpath:db.properties" />
+  </bean>  
+  
+
+
+  <!-- 
+  <bean id="dataSourceDBA" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+    <property name="driverClassName" value="${jdbc.driverClassName}" />
+    <property name="url"             value="${jdbc.url}"             />
+    <property name="username"        value="${jdbc.username}"        />
+    <property name="password"        value="${jdbc.password}"        />
+  </bean>
+   -->
+  
+  
+
+  <bean id="jdbc" class="com.spring.bean.propertyPlaceholderConfigurer.DB" >
+    <property name="driverClassName"  value="${jdbc.driverClassName}" />
+    <property name="url"              value="${jdbc.url}"             />
+    <property name="username"         value="${jdbc.username}"        />
+    <property name="password"         value="${jdbc.password}"        />
+  </bean> 
+  
+
+</beans>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+  
+  <!-- 
+  《欄位驗證器》設定風格
+  <field name="被驗證的欄位" >
+    <field-validator type="驗證器型態名" >
+      <param name="參數名" >參數值</param>
+      <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+    </field-validator>
+  </field>
+  -->
+  
+  <!-- 
+   《非欄位驗證器》設定風格
+    <validator type="驗證器型態名" >
+       <param name="fieldName" >需要被驗證的欄位</param>
+       <param name="參數名" >參數值</param>
+       <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+    </validator>
+  -->
+
+
+
+  <!-- 相簿名稱 -->
+  <field name="folderName" >                     
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>        <!-- 檢查時去掉前後空白 -->
+      <message key="folderName" />            <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+ 
+  </field>   
+  
+    
+  <!-- 相簿說明 -->
+  <field name="folderInfo" >
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態為 requiredstring  -->
+      <param name="trim" >true</param>        <!-- 檢查時去掉前後空白 -->
+      <message key="folderInfo" />            <!-- 國際化(i18n:internationalization)資源編碼設定 (globalMessages_XXXX.properties) -->
+    </field-validator>
+  </field>
+  
+  
+  
+</validators>

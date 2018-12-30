@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<!-- 
+   註冊使用者 Action 設定檔，該檔案和 RegisterAction 類別檔案相對應，實現註冊使用者驗證
+  
+  
+  《欄位驗證器》設定風格  
+-->
+<validators>
+ 
+  <!-- 驗證 用戶名 username 屬性 -->
+  <field name="username" >
+  
+    <!-- 指定 username 屬性不能為空 -->
+	<field-validator type="requiredstring" >
+	  <param name="trim" >true</param>
+	  <message key="username.notnull" />
+	</field-validator>
+
+    <!-- 指定 username 屬性必須比對正則表達式 -->
+    <field-validator type="regex" >
+      <param name="expression" ><![CDATA[(\w{4,25})]]></param>
+      <message key="username.length" />
+    </field-validator>
+    
+  </field>
+
+	
+	
+  <!-- 驗證 密碼 password 屬性 -->
+  <field name="password">
+  
+	<!-- 指定 password 屬性不能為空 -->
+    <field-validator type="requiredstring">
+	  <param name="trim" >true</param>
+	  <message key="password.notnull" />
+	</field-validator>
+		
+	<!-- 指定 password 屬性必須比對正則表達式 -->
+	<field-validator type="regex" >
+	  <param name="expression" ><![CDATA[(\w{4,25})]]></param>
+	  <message key="password.length" />
+	</field-validator>
+	
+  </field>
+	
+	
+	
+  <!-- 驗證 姓名 name 屬性 -->
+  <field name="name">
+  
+	<!-- 指定 name 屬性不能為空 -->
+	<field-validator type="requiredstring" >
+	  <param name="trim">true</param>
+	  <message key="name.notnull" />
+	</field-validator>	
+	
+  </field>
+	
+	
+	
+	
+  <!-- 驗證 暱稱 nic 屬性 -->
+  <field name="nic">
+	
+	<!-- 指定 nic 屬性不能為空 -->
+	<field-validator type="requiredstring" >
+	  <param name="trim">true</param>
+	  <message key="nic.notnull"/>
+	</field-validator>
+		
+	<!-- 指定 nic 屬性必須比對正則表達式 -->
+	<field-validator type="regex" >
+	  <param name="expression"><![CDATA[(\w{4,30})]]></param>
+	  <message key="nic.length"/>
+	</field-validator>
+	
+  </field>
+	
+	
+  <!-- 驗證 性別 sex 屬性 -->
+  <field name="sex">
+	<!-- 指定 sex 屬性不能為空 -->
+	<field-validator type="requiredstring">
+	  <param name="trim">true</param>
+	  <message key="sex.notnull"/>
+	</field-validator>
+  </field>
+	
+	
+	
+  <!-- 驗證 年齡 age 屬性 -->
+  <field name="age">
+	<field-validator type="int">
+	  <param name="min">18</param>
+	  <param name="max">50</param>
+	  <message key="age.length"/>
+	</field-validator>
+  </field>
+  
+  
+</validators>

@@ -1,0 +1,70 @@
+ 
+ 
+ 
+(1) 測試 處理器(BeanNameUrlHandlerMapping) 及 攔截器(HandlerInterceptor)
+    http://localhost:8080/ch15_Spring2.5Web/index.mvc
+
+
+(2) 測試 處理器 SimpleUrlHandlerMapping
+    http://localhost:8080/ch15_Spring2.5Web/index1.mvc
+
+
+(3) 測試 例外解析器  SimpleMappingExceptionResolver
+    http://localhost:8080/ch15_Spring2.5Web/indexException.mvc
+
+
+(4) 測試 指令控制器  AbstractCommandController
+    http://localhost:8080/ch15_Spring2.5Web/userCommandController.mvc?uid=1
+
+
+(5) 測試 表單控制器與驗證器  SimpleFormController
+    http://localhost:8080/ch15_Spring2.5Web/reg.mvc
+
+
+
+
+(6) 測試 多動作控制器  MultiActionController
+   
+    ※ 使用 ParameterMethodNameResolver
+    a.新增使用者
+      http://localhost:8080/ch15_Spring2.5Web/addUser.mvc?username=kevin&password=1234&method=addUser
+
+    b.刪除使用者
+      http://localhost:8080/ch15_Spring2.5Web/deleteUser.mvc?id=1
+
+ 
+    ※ 使用 PropertiesMethodNameResolver
+     a.新增使用者
+      http://localhost:8080/ch15_Spring2.5Web/addUser2.mvc?username=kevin&password=7788578
+
+     b.刪除使用者
+      http://localhost:8080/ch15_Spring2.5Web/deleteUser2.mvc?id=3
+
+
+
+(7) 測試 精靈控制器 AbstractWizardFormController
+    http://localhost:8080/ch15_Spring2.5Web/register.mvc
+
+
+(8) 測試 參數映射控制器 ParameterizableViewController
+    http://localhost:8080/ch15_Spring2.5Web/urlParameterizable.mvc
+
+
+(9) 測試 檔案名控制器 ParameterizableViewController
+    http://localhost:8080/ch15_Spring2.5Web/fileNameHi1.mvc
+    http://localhost:8080/ch15_Spring2.5Web/fileNameHi2.mvc
+
+
+
+(10) 測試檔案上傳
+    http://localhost:8080/ch15_Spring2.5Web/upload.mvc
+
+
+
+(11) 測試 Tiles
+    http://localhost:8080/ch15_Spring2.5Web/about.mvc
+    
+     
+    
+    
+    

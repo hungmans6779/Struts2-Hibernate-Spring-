@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+  <display-name></display-name>
+
+
+
+
+  <!-- 
+    為了保證所有這些設定檔都被載入，需要在 web.xml 檔案中設定一個上下文載入器。
+    上下文載入會載入除了 DispatcherServlet 載入的設定檔之外的其他卡下文設定檔。
+    根據系統發佈情況，可以選擇兩種上下文載入器：ContextLoaderListener 和 ContextLoaderServlet。
+  -->
+
+  <!-- 
+    設定 Spring Listener(監聽器)
+   
+    在多數情況下會將應用程式發佈到一個支援 Servlet2.3 或者更高版本的 Web 容器中，並且為 Servlet 設定 Servlet 監聽器。
+    如是是這樣，需要在 web.xml 中設定 ContextLoaderListener 。
+   -->
+  <listener>
+    <!-- 初始化設定器 -->
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>  
+
+  <!-- 
+    如果需要應用系統發佈一個老一點的 WEB 容器中，容器只支援 Servlet2.2 或者這個 Web 容器支援 Servlet2.3，
+    但是它不能在 Servlet 之前初始化監聽器，此時需要在 web.xml 中設定 ContextLoaderServlet。
+  -->
+  <!-- 
+  <servlet>
+    <servlet-name>context</servlet-name>
+    <servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>  
+  </servlet>
+  -->
+  
+
+  
+
+  <!--  
+    Spring 設定檔 
+    在 web.xml 中，可以透過在 Servlet 上下文中設定 contextConfigLocation 參數來上下文載入器指定一個或者多個 Spring 設定檔。 
+    從而使 Spring 透過比對指定模式的檔案來初始化物件。
+  -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <!-- 設定檔的位置(可以多個設定檔，用,隔開即可)  --> 
+    <param-value>
+      /WEB-INF/classes/applicationContext_dao.xml,
+      /WEB-INF/classes/applicationContext.xml,
+    </param-value>  
+  </context-param>
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Struts2 的 Filter，所有的請求都被映射到  Struts2 上 -->
+  <filter>
+    <filter-name>struts2</filter-name>          
+    <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+    <init-param>
+      <param-name>struts.action.extension</param-name>  <!-- 該參數可省略，預設為 *.action  -->
+      <param-value>action</param-value>
+    </init-param>
+    <init-param>
+      <param-name>actionPackages</param-name>                               <!--  零設定所在的(用@註釋，不設定在 struts.xml)  -->
+      <param-value>com.framework.struts2.action.annotation</param-value>    <!--  包名  -->
+    </init-param>
+  </filter> 
+  <!-- 用 Spring 解決編碼問題 -->
+  <filter>
+    <filter-name>SpringEncodingFilter</filter-name>   
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+    <init-param>
+      <param-name>encoding</param-name>          <!-- 編碼方式，採用 UTF-8 字元集 -->
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>     <!-- 強制進行轉換 -->
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>struts2</filter-name>
+    <!-- 
+    <url-pattern>*.action</url-pattern>
+    -->
+    <!-- 
+          如果 URI 中包含 "/struts/"，Struts 會傳回它整合的資源，例如  http://3w.eztravel.com.tw:8080/ch16_PhotoSystem/struts/dojo/struts_dojo.js 、
+         http://localhost:8080/ch16_PhotoSystem/struts/xhtml/styles.css  等、這些檔案實際並不存在，而是位於 Struts2 的 jar 中。
+         因此設定 Fileter 時要把所有的 URI 都轉到 Filter 中，而不僅僅是 .action 結尾的URI。
+    -->
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>SpringEncodingFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+
+  
+
+
+
+</web-app>

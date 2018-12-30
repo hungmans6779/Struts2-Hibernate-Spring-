@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  
+
+  <display-name></display-name>	
+  
+  
+
+  <!-- 
+    為了保證所有這些設定檔都被載入，需要在 web.xml 檔案中設定一個上下文載入器。
+    上下文載入會載入除了 DispatcherServlet 載入的設定檔之外的其他卡下文設定檔。
+    根據系統發佈情況，可以選擇兩種上下文載入器：ContextLoaderListener 和 ContextLoaderServlet。
+  -->
+
+  <!-- 
+    設定 Listener 載入 Spring 設定檔
+   
+    在多數情況下會將應用程式發佈到一個支援 Servlet2.3 或者更高版本的 Web 容器中，並且為 Servlet 設定 Servlet 監聽器。
+    如是是這樣，需要在 web.xml 中設定 ContextLoaderListener 。
+   -->
+  <listener>
+    <!-- 初始化設定器 -->
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- 
+    如果需要應用系統發佈一個老一點的 WEB 容器中，容器只支援 Servlet2.2 或者這個 Web 容器支援 Servlet2.3，
+    但是它不能在 Servlet 之前初始化監聽器，此時需要在 web.xml 中設定 ContextLoaderServlet。
+  -->
+  <!-- 
+  <servlet>
+    <servlet-name>context</servlet-name>
+    <servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>  
+  </servlet>
+  -->
+  
+  
+  
+ 
+
+
+  <!--  
+    Spring 設定檔 
+   在 web.xml 中，可以透過在 Servlet 上下文中設定 contextConfigLocation 參數來上下文載入器指定一個或者多個 Spring 設定檔。 
+  -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <!-- 設定檔的位置(可以多個設定檔，用,隔開即可)  --> 
+    <param-value>
+      /WEB-INF/classes/applicationContext.xml
+    </param-value>
+  </context-param>
+  
+  
+  
+  
+
+  
+  
+  <!-- Spring_MVC 分發器 -->
+  <!-- 
+     DispatcherServlet 上下文所用的 Bean 也需要一個 Spring 設定檔進行定義，這個檔案就是 Spring_MVC-servlet.xml，
+     但是 web.xml 中並沒有指定該設定檔。這是因為 DispatcherServlet 將按照預設契約機制進行工作，它自動尋找 /WEB-INF/<servlet-name>-servlet.xml 的設定檔。
+     使用該設定檔初始化 DispatcherServlet 上下文對應的 子Spring 容器。
+     由於 DispatcherServlet 的設定檔 Spring_MVC-servlet.xml ，所以在這個檔案中應該包含用於控制器和其他 Spring MVC 元件的 Bean 定義資訊。
+     對於業務層和資料層的 Bean ，一般傾向將它們分別定義在 Spring_MVC-service.xml 和 Spring_MVC-dao.xml。
+  -->
+  <!-- 
+  <servlet>
+    <servlet-name>Spring_MVC</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Spring_MVC</servlet-name>
+    <url-pattern>*.mvc</url-pattern>
+  </servlet-mapping>
+  -->
+  <servlet>
+    <servlet-name>Spring_MVC</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+        /WEB-INF/classes/Spring_MVC-setting.xml,
+        /WEB-INF/classes/Spring_MVC-servlet.xml,
+        /WEB-INF/classes/Spring_MVC-service.xml,
+        /WEB-INF/classes/Spring_MVC-dao.xml
+      </param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>     <!-- 啟動時載入 -->
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Spring_MVC</servlet-name>
+    <url-pattern>*.mvc</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  
+
+  
+  
+  <!-- 用 Spring 解決編碼問題(開始) -->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    
+    <!-- 編碼方式，採用 UTF-8 字元集 -->
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    
+    <!-- 強制進行轉換 -->
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>*.mvc</url-pattern>
+  </filter-mapping>
+  <!-- 用 Spring 解決編碼問題(結束) -->
+  
+  
+  
+  
+  
+  
+   
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+   
+  
+  
+     
+    
+</web-app>

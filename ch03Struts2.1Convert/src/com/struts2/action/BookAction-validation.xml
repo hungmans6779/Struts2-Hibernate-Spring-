@@ -1,0 +1,33 @@
+<!DOCTYPE validators PUBLIC
+"-//OpenSymphony Group//XWork Validator 1.0//EN"
+"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+  <!-- 檢查圖書名稱 -->
+  <field name="name" >
+    <field-validator type="requiredstring" >    <!-- 必需的 -->
+      <param name="true" >true</param>          <!-- 檢查時去掉前後空白 -->
+      <message>請輸入圖書名稱</message>         <!-- 提示資訊 -->
+    </field-validator>
+  </field>
+  
+  
+  <!-- 檢查價格，必須為空 -->
+  <field name="price" >
+    <field-validator type="double">             <!-- 必需的 -->
+      <param name="true" >true</param>          <!-- 檢查時去掉前後空白 -->
+      <message>請輸入價格</message>             <!-- 提示資訊 -->
+    </field-validator>
+  </field>
+
+
+  <!-- 檢查發行數量，必須為空 -->
+  <field name="num" >
+    <field-validator type="int" >               <!-- 必需的 -->
+      <param name="true" >true</param>          <!-- 檢查時去掉前後空白 -->
+      <message>請輸入發行數量</message>         <!-- 提示資訊 -->
+    </field-validator>
+  </field>
+    
+</validators>

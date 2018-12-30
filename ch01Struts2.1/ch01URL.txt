@@ -1,0 +1,6 @@
+
+
+
+http://3w.eztravel.com.tw:8080/ch01Struts2.1/login/checkLogin.action
+
+

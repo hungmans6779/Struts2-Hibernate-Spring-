@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+
+  <!-- 
+
+          AOP (Aspect Oriented Programming，剖面導向程式設計)的主要目的是針對業務處理過程中的剖面進行分析，所面對的是處理過程中的某個步驟或階段，
+    以獲得邏輯過程中各部分之間低耦合性的隔離效果。可以透過預先編譯方式和執行時動態代理，實現在不修改原始程式碼的情況下，統一給程式動態增加功能的一種技術。
+    AOP 實際上是 GoF 設計模式的延續，設計模式追求的是呼叫者和被呼叫者之間的解耦，AOP 可以說也是這種目標的一種實現。
+    
+       本章以 AOP 術語以及 AOP 的簡單實現展開， 逐步深入介紹 AOP 通知型態與使用、切點的定義與應用以及引入通知、代理工廠和自動代理。 
+      
+    (1) AOP： Spring 最被入重視的另一方面是支援 AOP 的實現，然而 AOP Framewok 只是 Spring 的一個子 Framework ，稱 Spring Framework 為 AOP Framework
+              並不是一個適當的描述，人們對 AOP 的關心反映在 Spring 上，使得對於 Spring 的關心集中在它的 AOP Framework 上。
+              舉個實際的例子來說明 AOP 的功能之一。例如，有個記錄檔 (Logging)的需求，可以無須修改任何一行程式碼，就可以將這個需求加入至原先的應用程式中，
+              也可以在不修改任何程式碼的情況下將這個記錄檔的功能移除。Spring 的 IoC 容器功能與 AOP 功能的實現是其重心所在，在 Spring 下實現了持久層、
+              MVC Web Framework 以及各種企業服務的 API 封裝，它們的實現有些相依於 Spring 的 IoC 容器與 AOP 功能、Spring 的這些子 Framework 或封裝的 API
+              功能彼可以獨立，也可以結合其他的 Framework 方案加以替代，Spring 希望提供一站式的 Framework 整合方式。
+    
+    (2) Web Framework：Spirng 也提供 MVC Framework 的解決方案，使用 Spring Web Framework 的好處是可以兼用 IoC 與 AOP 的功能，甚至可以輕鬆地替換使用不同的 
+                       View 層技術，例如使用 JSP 、結果 Tiles 作為展現給使用者的畫面技術。也可以將自己熟悉的 Web Framework 與 Spring 進行整合，
+                       例如： Struts、JSF 等，都可以與 Spring 進行整合，而且適用於所開發的應用程式。 
+                  
+    (3) 剖面： 剖面(Aspect) 是指需要實現的交叉功能。是應用系統模組化的一個剖面領域。剖面最常見的例子是記錄檔記錄。系統中到處都需要使用記錄檔記錄，
+               利用繼承來重用紀錄檔模組不適合。然而，可以建立一個記錄檔記錄剖面，在系統中透過使用 AOP 技術來應用。
+    
+    (4) 連接點：連接點(Joinpoint)是應用程式執行過程中插入剖面的地點。這個地點可以是方法呼叫、例外拋出，或者需要修改的攔位元。在這些地方將剖面程式碼插入
+                到應用流程中，可以增加新的行為。
+    
+    (5) 通知：通知(Advice)是剖面的實際實現。通知將應用系統新的行為。在記錄檔例子中，記錄檔通知包含了實現實際記錄檔功能的程式碼，例如向記錄檔檔案寫記錄檔。
+              通知在連接點插入到應用系統中。 
+    
+    (6) 切入點：切入點(Pointcut)定義了通知應該應用在哪些連接點。通知可以應用到 AOP Framework 支援的任何連接點。當然，並不希望將所有剖面應用到所有可能的
+                連接點上。切入點用於指定將通知應用到什麼地方。通常透過指定類別名和方法名，或者比對類別名和方法名的正則運算式來指定切入點。
+                一些 AOP Framework 允許動態建立切入點，在執行時根據條件決定是否應用剖面，如方法參數值。
+    
+    (7) 引入：引入(Introduction)允許為已存在類別增加新方法和屬性。例如，可以建立一個稽查通知來記錄物件的最後修改時間。只要用一個方法 setLastModified(Date)
+              以及一個儲存這個狀態的變數，可以在不改變已存在類別的情況下將這個方法與變數參考，給它們新的行為和狀態。
+    
+    (8) 目標物件：目標物件(Target Object) 是被通知物件。既可以是撰寫的類別，也可以是需要增加指定行為的協力廠商類別。如果沒有 AOP ，這個類別就必須包含
+                  它的主要邏輯以及其他交叉業務邏輯。有了 AOP ，目標物件就可以完全地關心主要業務，不再關心應用其上的通知。  
+    
+    (9) AOP 代理：代理(AOP Proxy)是將通知應用至目標物件後建立的物件。對於客戶物件來說，目標物件(應用 AOP 之前的物件)和代理物件(應用 AOP 之後的物件)
+                  是一樣的。也就是說，應用系統的其他部份不用為了支援代理物件而改變。
+    
+    (10) 織入：織入(Weaving)是將剖面應用到目標物件從而建立一個新的代理物件的過程。剖面在指定接入點被織入到目標物件中。
+          
+       
+       
+       
+       
+       
+    ※ 定義 Pointcut (切入點)
+        透過前面可得知如何撰寫通知，但是不能表達在應用系統的什麼地方應用這些通知，通知將變得毫無用處，這這是切入點的用處。
+    切入點決定了一個特定類別的特定方法是否滿足一條特定規則。如果一個方法確實符合，就將通知應用到該方法上。
+    Spring 的切入點可以以一種靈活的方式定義在什麼地方將通知織入到目標類別中。
+    
+    定義一個新的 Pointcut 的方法
+    Spring 透過 org.springframework.aop.Pointcut 介面描述切點，Pointcut 由 ClassFilter 和 MethodMather 構成，透過 ClassFilter 定位到某些特定類別上，
+    也就是類別過濾。透過類別的某些特定方法的能力。
+    
+    (1) 類別過濾：
+            Pointcut 根據方法和類別決定在什麼地方織入通知。ClassFilter 介面決定了一個類別是否符合通知的要求，ClassFilter 只定義了一個方法 matches(Class clazz)，
+        其參數代表一個被檢測的類別，該方法用於判別被檢測的類別是否比對過濾條件。
+            實現這個介面的類別決定了以參數傳入進來的類別是否應該被通知。實現這個介面的類別一般根據類別名決定，但並不是必須這樣。這個介面總是包含一個簡單的
+        ClassFilter 介面實現一個 ClassFilter.TRUE。它是標準的、適合任何類別的 ClassFilter 實例，適用於建立只根據方法決定符合要求的切入點。
+       
+    (2) 方法過濾： 
+        透過 MethodMatcher 介面可以實現方法過濾，MethodMatcher 介面有3個方法。 matches(Method,Class) 方法根據目標類別和方法決定一個方法是否該被通知，
+        因為可以靜態地判斷，所以可以在 AOP 代理被建立時呼叫一次這個方法。這個方法的結果最終決定了通知是否被織入。
+        如果 matches(Mathod,Class) 傳回 true，將呼叫 isRuntime() 方法來決定 MethodMatcher 的型態，有靜態和動態兩種。
+        ● 靜態切入點：通知總是被執行。如果切入點是靜態的，isRuntime() 方法傳回 false。 
+        ● 動態切入點：根據執行時方法的參數值決定通知是否需要被執行。如果切入點是動態的， isRuntime() 方應該傳回 true。與 matches(Method,Class) 方法一樣，
+                       isRuntime() 方法也只在建立代理類別時被呼叫一次。
+                       
+         如果一個切入點是靜態的， matches(Method,Class,Object[])方法永遠不會被呼叫，因為不需要根據參數的執行時值來決定通知是否被應用。
+     對於動態切入點，目標物件方法每次被呼叫時，matches(Mathod,Class,Object[])方法都被呼叫，這樣在這些方法被呼叫時都會增加負擔。因此為了避免這些，
+     應盡可能使用靜態切入點。
+     
+    (3) 比對器：
+        在 Spring 中有兩種方法比對器：靜態方法比對器和動態方法比對器。所謂靜態方法比對器，它僅對方法名簽名(包含方法名和導入參數型態及順序)進行比對；
+    而動態方法比對器，會在執行時檢查方法導入參數的值。靜態比對僅會判斷一次；而動態比對因為每次呼叫方法的導入參數可能不一樣，所以每次呼叫方法時都必須判斷，
+    因此，動態比對對性能的影響很大。在一般情況下，動態比對不常使用。方法比對器的型態由 isRuntime() 傳回值決定，傳回 false 表示靜態方法比對器，
+    傳回 true 表示是動態方法比對器。  
+     
+     
+    瞭解 Advisor 
+    
+    剖面是由定義剖面行為的通知(Advice) 和定義剖面在什麼地方執行的切入點(Pointcut)組合而成的。
+    Spring 使用 org.springframework.aop.Advisor 介面表示剖面的概念，一個剖面同時包含模切程式碼和連接點資訊。
+    剖面可以分為3類別：一般剖面、切點剖面和引入剖面，這裡主要講述切點剖面。
+  -->	
+	
+	
+  
+  
+  
+  
+  <!-- 
+    使用 Spring 靜態 Pointcut(切入點)
+     
+    ※ NameMatchMethodPointcut：只能對方法名進行判別的靜態 Pointcut 實現類別。
+    
+    
+    靜態切入點在代理建立時建立一次，而不是在執行期間每次呼叫方法時都執行，所以性能比動態切入點還好，是首選的切入點方式。
+    靜態即表示不變，例如方法和類別的名稱。因此可以根據類別和方法的簽名來判定哪些類別的哪些方法在定義的切入點之內、哪些應該被過濾排除。
+    在 Spring 中定義了如下兩個靜態切入點的實現類別。  
+    ◆ StaticMethodMatcherPointcut：一個抽象的靜態 Pointcut，它不能被產生實現。開發者可以自己擴充該類別來實現自訂的切入點。
+    ◆ NameMatchMethodPointcut：只能對方法名進行判別的靜態 Pointcut 實現類別。
+  -->
+  <bean id="pointcut_NameMatchMethodPointcutAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor" >
+    
+    <!-- 植入前置通知(MethodBeforeAdvice)  -->
+    <property name="advice" >   
+      <bean class="aop.advisor.beforeAdvice.advice.MethodBeforeInterceptor"  />   <!-- 採用匿名類別物件的方式  -->
+    </property>
+    
+    <!-- 攔截 start 的方法 -->
+    <!-- 
+    <property name="mappedName" value="start" ></property>        
+    -->
+    <!-- 指定攔截方法，如果是多個方法，可以使用 <list> 元素指定 -->
+    <property name="mappedNames" >
+      <list>
+        <value>pos*</value>  <!-- 表示包含所有以 pos 開始的方法(有大小寫之分)。 -->
+        <value>start</value>
+      </list>
+    </property>
+  </bean>
+  
+  
+  
+  
+  <!-- 使用 Spring 代理工廠設定一個代理  -->
+  <!-- 
+    ProxyFactoryBean 是 FactoryBean 介面的實現類別，負責為其他 Bean 建立代理實例，在內部使用 ProxyFactory 來完成這一工作。
+    下面來詳細說明 ProxyFactoryBean 的常用設定屬性：
+   
+    ＊ proxyInterfaces：代理所有實現的介面，可以是多個介面。該屬性還有一個別名屬性 interfaces。
+    
+    ＊ interceptorNames：需要織入目標物件的前置通知類別陣列(必須採用全限定類別名)，在內部 interceptorNames 是一個字串陣列， 
+                         ProxyFactoryBean 透過反射機制獲得對應的類別，它們可以是攔截器、通知或者包含通知和切點的 Advisor，設定中的順序對應呼叫的順序。
+    
+    ＊ target：代理目標物件。
+    
+    ＊ singleton：傳回的代理是否是單例，預設為單實例。 
+    
+    ＊ optimize：當設定為 true 時，強制使用 CGLIB 代理。對於 singleton 的代理，推薦使用 CGLIB ，對於其他作用攔位元型別的代理，最好使用 JDK 代理 。
+                 原因是 CGLIB 建立代理速度慢，而產出的代理物件執行效率高，而使用 JDK 代理的表現正好相反。
+              
+    ＊ proxyTargetClass：是否對類別進行代理，而不是對介面進行代理，設定為 true時，使用 CGLIB 代理。
+    
+
+    ※ 在 Spring AOP 中，為目標 Bean 織入橫切邏輯時，使用的動態代理技術有 JDK 動態代理和 CGLIB 動態代理。
+              
+              
+               
+     § AOP 的代理模式
+     
+     代理模式是 Spring 中常用的設計模式。Spring 提供了幾個常用的代理類別，例如普通的代理類別、交易代理類別等。
+    
+     ProxyFactoryBean 代理工廠物件
+     設定 AopServiceImpl 時使用了 org.springframework.aop.framework.ProxyFactoryBean 類別。
+     這是 Spring 內建的代理類別，引入了一個中間層，能夠建立不同類型的物件。利用它可以實現任何形式的AOP。
+            
+     TransactionProxyFactoryBean  交易代理工廠物件  
+     另一個很有用的代理類別是 TransactionProxyFactoryBean，是 ProxyFactoryBean 的子類別，常用在資料庫程式設計上。
+     Spring 利用 TransactionProxyFactoryBean 對交易進行管理，在指定方法前利用 AOP 連接資料庫並開啟交易，
+     然後在指定方法傳回後利用 AOP 傳送交易並斷開資料庫。
+     
+     AOP 模組提供對方面導向程式設計的支援。Spring 提供三種攔截器：方法前攔截器、傳回後攔截器、例外拋出攔截器。
+     分別在方法執行前、執行後、例外拋出後執行。
+     攔截器能夠作用在指定的類別、指定的方法上、能夠使用 Spring 的資料來源等資料。          
+  -->  
+  <bean id="proxyFactoryBean_NameMatchMethodPointcutAdvisor" class="org.springframework.aop.framework.ProxyFactoryBean" >
+ 
+    <!-- 指定代理介面，如果是多個介面，可以使用 <list> 元素指定 -->
+    <property name="proxyInterfaces" value="aop.advisor.beforeAdvice.service.IAOPService" />
+    
+    <!-- 使用Pointcut(切入點) -->
+    <property name="interceptorNames" >
+      <list>
+        <value>pointcut_NameMatchMethodPointcutAdvisor</value>
+      </list>
+    </property> 
+   
+    <!-- 被攔截器的物件 -->
+    <property name="target" >
+      <bean class="aop.advisor.beforeAdvice.service.impl.AOPServiceImpl" />   <!-- 採用匿名類別物件的方式 -->
+    </property> 
+     
+ </bean> 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+	
+  
+  <!-- 
+    使用 Spring 靜態 Pointcut(切入點)
+    
+    ※ StaticMethodMatcherPointcut：一個抽象的靜態 Pointcut，它不能被產生實現。開發者可以自己擴充該類別來實現自訂的切入點。
+    
+    
+    靜態切入點在代理建立時建立一次，而不是在執行期間每次呼叫方法時都執行，所以性能比動態切入點還好，是首選的切入點方式。
+    靜態即表示不變，例如方法和類別的名稱。因此可以根據類別和方法的簽名來判定哪些類別的哪些方法在定義的切入點之內、哪些應該被過濾排除。
+    在 Spring 中定義了如下兩個靜態切入點的實現類別。
+    ◆ NameMatchMethodPointcut：只能對方法名進行判別的靜態 Pointcut 實現類別。
+    ◆ StaticMethodMatcherPointcut：一個抽象的靜態 Pointcut，它不能被產生實現。開發者可以自己擴充該類別來實現自訂的切入點。
+  -->
+  <bean id="pointcut_StaticMethodMatcherPointcutAdvisor" class="aop.advisor.statics.advisor.PeopleAdvisor"  >
+    <!-- 植入前置通知  -->
+    <property name="advice" >   
+      <bean class="aop.advisor.statics.advice.PeopleBeforeAdvice" />  <!-- 採用匿名類別物件的方式  -->
+    </property>
+  </bean>
+ 
+ 
+  <bean id="proxyFactoryBean_StaticMethodMatcherPointcut" class="org.springframework.aop.framework.ProxyFactoryBean" >
+  
+    <!-- 攔截器，指定切入點，如果是多個，可以使用 <list> 元素指定 -->
+    <property name="interceptorNames" >
+      <!-- 
+      <idref local="pointcut_StaticMethodMatcherPointcutAdvisor" />
+      -->
+      <list>
+        <value>pointcut_StaticMethodMatcherPointcutAdvisor</value>   <!-- 剖面  -->
+      </list> 
+    </property>
+    
+    <!-- 被攔截的物件，指定目標物件 -->
+    <property name="target" >
+      <bean class="aop.advisor.statics.People" />    <!-- 採用匿名類別物件的方式  -->
+    </property> 
+    
+  </bean> 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- 
+    使用規則運算式
+   
+    在 Spring 中， RegexpMethodPointcutAdvisor 是正則運算式方法比對的剖面實現類別。
+    一般情況下，不需要擴充該類別，因此也省去了寫通知剖面的麻煩。
+    
+    在定義切入點時經常使用的正則運算式符號
+    
+    (1) . ：比對分行符號外的所有單一字元。  
+      範例：setFoo. 比對 setFooB，但不比對 setFoo 或者 setFooBar。
+            
+    (2) + ：比對 + 號前面的字元 1 次或者 N 次。
+      範例：setFoo.+ 比對 setFooB 和 setFooBar，但不比對 setFoo
+    
+    (3) * ：比對 * 號前面的字元 0 次或者 N 次。
+      範例：setFoo.* 比對 setFoo、setFooB 和 setFooBar。
+    
+    (4) ? ：比對 ? 號前面的字元 0 次或者 1 次。
+      範例：e?le? 比對 angel 中的el 束和 angle 中的le。
+  -->
+  <bean id="pointcut_RegexpMethodPointcutAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor" >
+  
+    <!-- 植入前置通知(MethodBeforeAdvice)  -->
+    <property name="advice" >
+      <bean class="aop.advisor.regexp.advice.PeopleBeforeAdvice" />  <!-- 採用匿名類別物件的方式  -->
+    </property>
+   
+    <!-- 使用正則運算式 -->
+    <property name="patterns" >
+      <list>
+        <value>.*ing</value>  <!--  表示以 ing 結尾的方法 -->
+      </list>
+    </property>    
+    
+  </bean>  
+    
+    
+    
+  <!-- 使用 Spring 代理工廠設定一個代理  -->
+  <!-- 
+    ProxyFactoryBean 是 FactoryBean 介面的實現類別，負責為其他 Bean 建立代理實例，在內部使用 ProxyFactory 來完成這一工作。
+    下面來詳細說明 ProxyFactoryBean 的常用設定屬性：
+   
+    ＊ proxyInterfaces：代理所有實現的介面，可以是多個介面。該屬性還有一個別名屬性 interfaces。
+    
+    ＊ interceptorNames：需要織入目標物件的前置通知類別陣列(必須採用全限定類別名)，在內部 interceptorNames 是一個字串陣列， 
+                         ProxyFactoryBean 透過反射機制獲得對應的類別，它們可以是攔截器、通知或者包含通知和切點的 Advisor，設定中的順序對應呼叫的順序。
+    
+    ＊ target：代理目標物件。
+    
+    ＊ singleton：傳回的代理是否是單例，預設為單實例。 
+    
+    ＊ optimize：當設定為 true 時，強制使用 CGLIB 代理。對於 singleton 的代理，推薦使用 CGLIB ，對於其他作用攔位元型別的代理，最好使用 JDK 代理 。
+                 原因是 CGLIB 建立代理速度慢，而產出的代理物件執行效率高，而使用 JDK 代理的表現正好相反。
+              
+    ＊ proxyTargetClass：是否對類別進行代理，而不是對介面進行代理，設定為 true時，使用 CGLIB 代理。
+    
+
+    ※ 在 Spring AOP 中，為目標 Bean 織入橫切邏輯時，使用的動態代理技術有 JDK 動態代理和 CGLIB 動態代理。
+              
+              
+               
+     § AOP 的代理模式
+     
+     代理模式是 Spring 中常用的設計模式。Spring 提供了幾個常用的代理類別，例如普通的代理類別、交易代理類別等。
+    
+     ProxyFactoryBean 代理工廠物件
+     設定 AopServiceImpl 時使用了 org.springframework.aop.framework.ProxyFactoryBean 類別。
+     這是 Spring 內建的代理類別，引入了一個中間層，能夠建立不同類型的物件。利用它可以實現任何形式的AOP。
+            
+     TransactionProxyFactoryBean  交易代理工廠物件  
+     另一個很有用的代理類別是 TransactionProxyFactoryBean，是 ProxyFactoryBean 的子類別，常用在資料庫程式設計上。
+     Spring 利用 TransactionProxyFactoryBean 對交易進行管理，在指定方法前利用 AOP 連接資料庫並開啟交易，
+     然後在指定方法傳回後利用 AOP 傳送交易並斷開資料庫。
+     
+     AOP 模組提供對方面導向程式設計的支援。Spring 提供三種攔截器：方法前攔截器、傳回後攔截器、例外拋出攔截器。
+     分別在方法執行前、執行後、例外拋出後執行。
+     攔截器能夠作用在指定的類別、指定的方法上、能夠使用 Spring 的資料來源等資料。          
+  -->  
+  <bean id="proxyFactoryBean_RegexpMethodPointcutAdvisor" class="org.springframework.aop.framework.ProxyFactoryBean" >
+  
+    <!-- 是否對類別進行代理，而不是對介面進行代理，設定為 true時，使用 CGLIB 代理  -->
+    <property name="proxyTargetClass" value="true"/>
+   
+    <!-- 攔截器，指定切入點，如果是多個，可以使用 <list> 元素指定 -->
+    <property name="interceptorNames" >
+      <!-- 
+      <idref local="pointcut_RegexpMethodPointcutAdvisor" />
+      -->
+      <list>
+        <value>pointcut_RegexpMethodPointcutAdvisor</value>   <!-- 剖面  -->
+      </list> 
+    </property>
+    
+    <!-- 被攔截的物件，指定目標物件 -->
+    <property name="target" >
+      <bean class="aop.advisor.regexp.People" />    <!-- 採用匿名類別物件的方式  -->
+    </property> 
+    
+  </bean> 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- 
+    使用 Spring 動態 Pointcut 
+    
+        由於動態切入點除了要考慮方法的名稱等靜態資訊外，還要考慮方法的參數。由於它是動態的，在執行時既要計算方法的靜態資訊，
+    還要計算其參數，結果也不能被快取記憶體。因此，動態切入點要消耗更多的系統資源。
+    
+    Spring 中提供了如下幾種動態切入點的實現。
+    ◆ ControlFlowPointcut：控制流程切入點。例如：只有在某個特定的類別和方法中呼叫某個連接點時，裝備才會被觸發，這時就可以使用 ControlFlowPointcut，
+                            但是它的系統消耗很大，在追求高效的應用中，不推薦使用。
+    ◆ DynmaicMethodMatcherPointcut：動態方法比對器，是抽象類別，擴充該類別可以實現自己的動態 Pointcut。
+  -->
+  
+  <!-- 
+    設定控制流程切點 ControlFlowPointcut 
+    
+    ControlFlowPointcut有兩個建構方法，如下所示。
+    ★ ControlFlowPointcut(Class clazz)：指定一個類別作為流程切入點。
+    ★ ControlFlowPointcut(Class clazz、String methodName)：指定一個類別和某一個方法作為流程切入點。
+  -->
+  <bean id="peopleDelegate" class="org.springframework.aop.support.ControlFlowPointcut" >  
+    <!--  指定 ControlFlowPointcut 的第 1 個參數 PeopleDelegate 類別  -->
+    <constructor-arg type="java.lang.Class" value="aop.advisor.dynamic.PeopleDelegate" />
+    
+    <!--  指定 ControlFlowPointcut 的第 2 個參數 living() 方法  -->
+    <constructor-arg type="java.lang.String" value="living" />
+  </bean>
+  
+
+  <!--  設定控制流程剖面 -->
+  <bean id="pointcut_DefaultPointcutAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor" >
+
+    <!-- 指定切點  -->
+    <property name="pointcut" ref="peopleDelegate" />
+    
+    <!-- 指定通知 -->
+    <property name="advice" >
+      <bean class="aop.advisor.dynamic.advice.PeopleBeforeAdvice" />
+    </property>
+  
+  </bean>  
+  
+  
+  <!-- 使用 Spring 代理工廠設定一個代理  -->
+  <!-- 
+    ProxyFactoryBean 是 FactoryBean 介面的實現類別，負責為其他 Bean 建立代理實例，在內部使用 ProxyFactory 來完成這一工作。
+    下面來詳細說明 ProxyFactoryBean 的常用設定屬性：
+   
+    ＊ proxyInterfaces：代理所有實現的介面，可以是多個介面。該屬性還有一個別名屬性 interfaces。
+    
+    ＊ interceptorNames：需要織入目標物件的前置通知類別陣列(必須採用全限定類別名)，在內部 interceptorNames 是一個字串陣列， 
+                         ProxyFactoryBean 透過反射機制獲得對應的類別，它們可以是攔截器、通知或者包含通知和切點的 Advisor，設定中的順序對應呼叫的順序。
+    
+    ＊ target：代理目標物件。
+    
+    ＊ singleton：傳回的代理是否是單例，預設為單實例。 
+    
+    ＊ optimize：當設定為 true 時，強制使用 CGLIB 代理。對於 singleton 的代理，推薦使用 CGLIB ，對於其他作用攔位元型別的代理，最好使用 JDK 代理 。
+                 原因是 CGLIB 建立代理速度慢，而產出的代理物件執行效率高，而使用 JDK 代理的表現正好相反。
+              
+    ＊ proxyTargetClass：是否對類別進行代理，而不是對介面進行代理，設定為 true時，使用 CGLIB 代理。
+    
+
+    ※ 在 Spring AOP 中，為目標 Bean 織入橫切邏輯時，使用的動態代理技術有 JDK 動態代理和 CGLIB 動態代理。
+              
+              
+               
+     § AOP 的代理模式
+     
+     代理模式是 Spring 中常用的設計模式。Spring 提供了幾個常用的代理類別，例如普通的代理類別、交易代理類別等。
+    
+     ProxyFactoryBean 代理工廠物件
+     設定 AopServiceImpl 時使用了 org.springframework.aop.framework.ProxyFactoryBean 類別。
+     這是 Spring 內建的代理類別，引入了一個中間層，能夠建立不同類型的物件。利用它可以實現任何形式的AOP。
+            
+     TransactionProxyFactoryBean  交易代理工廠物件  
+     另一個很有用的代理類別是 TransactionProxyFactoryBean，是 ProxyFactoryBean 的子類別，常用在資料庫程式設計上。
+     Spring 利用 TransactionProxyFactoryBean 對交易進行管理，在指定方法前利用 AOP 連接資料庫並開啟交易，
+     然後在指定方法傳回後利用 AOP 傳送交易並斷開資料庫。
+     
+     AOP 模組提供對方面導向程式設計的支援。Spring 提供三種攔截器：方法前攔截器、傳回後攔截器、例外拋出攔截器。
+     分別在方法執行前、執行後、例外拋出後執行。
+     攔截器能夠作用在指定的類別、指定的方法上、能夠使用 Spring 的資料來源等資料。          
+  -->  
+  <bean id="proxyFactoryBean_DefaultPointcutAdvisor" class="org.springframework.aop.framework.ProxyFactoryBean" >
+  
+    <!-- 是否對類別進行代理，而不是對介面進行代理，設定為 true時，使用 CGLIB 代理  -->
+    <property name="proxyTargetClass" value="true"/>
+   
+    <!-- 攔截器，指定切入點，如果是多個，可以使用 <list> 元素指定 -->
+    <property name="interceptorNames" >
+      <!-- 
+      <idref local="pointcut_DefaultPointcutAdvisor" />
+      -->
+      <list>
+        <value>pointcut_DefaultPointcutAdvisor</value>   <!-- 剖面  -->
+      </list> 
+    </property>
+    
+    <!-- 被攔截的物件，指定目標物件 -->
+    <property name="target" >
+      <bean class="aop.advisor.dynamic.People" />    <!-- 採用匿名類別物件的方式  -->
+    </property> 
+    
+  </bean> 
+  
+  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+  <bean id="pointcut_DefaultIntroductionAdvisor" class="org.springframework.aop.support.DefaultIntroductionAdvisor" >
+  
+  </bean> 
+   
+  
+</beans>	

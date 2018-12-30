@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+
+<!-- 
+    必填驗證器 
+    type="required"用於檢查指定的攔位必須有值(非null)，這是內建驗證器中比較簡單的一個。
+-->
+<validators>
+
+  <field name="userName" >                             <!-- 指定屬性為 userName  -->
+    <field-validator type="required" >                 <!-- 定義驗證型態  -->
+      <param name="trim" >true</param>                 <!-- 檢查時去掉前後空白 -->
+      <message>沒有姓名資訊，userName 為空</message>   <!-- 驗證失敗時輸出資訊 -->
+    </field-validator>
+  </field>
+  
+  <field name="pass" >                                 <!-- 指定屬性為 pass  -->
+    <field-validator type="required" >                 <!-- 定義驗證型態  -->
+      <param name="trim" >true</param>                 <!-- 檢查時去掉前後空白 -->
+      <message>沒有密碼資訊，pass 為空</message>       <!-- 驗證失敗時輸出資訊 -->
+    </field-validator>
+  </field>
+  
+</validators>
+ 

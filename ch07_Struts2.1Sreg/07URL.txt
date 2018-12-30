@@ -1,0 +1,28 @@
+   第 七 章  使用者註冊系統
+
+
+       講述如何使用JSP、Struts2.x 和 JavaBean 技術實現使用者註冊系統，在講解過程中將按照系統流程，即系統需求分析、系統設計，
+   資料庫設計和模組實現等實現過程一一介紹，充分學習 Struts2.x 技術的基礎之上，了解系統需求分析、系統設計和資料庫設計在專案開發中的重要性，
+   從而把握先進的設計理念和良好的系統設計思想。
+   
+   
+   《會員註冊》：
+    http://3w.eztravel.com.tw:8080/ch07_Struts2.1Sreg/form/register/register.jsp
+      
+      
+   《會員帳號登入》： 
+    http://3w.eztravel.com.tw:8080/ch07_Struts2.1Sreg/form/user/index.jsp
+      
+      
+           
+   《新增管員理帳號》： 
+    http://3w.eztravel.com.tw:8080/ch07_Struts2.1Sreg/form/admin/addAdmin.jsp
+    
+    
+      
+   《管員理帳號登入》： 
+    http://3w.eztravel.com.tw:8080/ch07_Struts2.1Sreg/form/admin/index.jsp
+    
+
+   
+   

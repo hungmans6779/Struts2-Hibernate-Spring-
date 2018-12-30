@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+  <!-- 
+    連結資料庫的設定
+  -->
+  <bean id="dbc" class="com.framework.util.DatabaseConn" 
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" />
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  <!-- 植入 userDao ，將 userDao 映射到 com.framework.dao.UserDao --> 
+  <bean id="userDao" class="com.framework.dao.UserDao" 
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" >
+    <property name="dbc" ref="dbc" />        
+  </bean> 
+  
+ 
+  <!--  植入 folderDao ，將 userDao 映射到 com.framework.dao.FolderDao -->
+  <bean id="folderDao" class="com.framework.dao.FolderDao" 
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" >
+    <property name="dbc" ref="dbc" />        
+  </bean> 
+
+  
+  <!--  植入 photoDao ，將 userDao 映射到 com.framework.dao.PhotoDao --> 
+  <bean id="photoDao" class="com.framework.dao.PhotoDao" 
+        abstract="false" lazy-init="default" autowire="default" dependency-check="default" >
+    <property name="dbc" ref="dbc" />        
+  </bean> 
+
+  
+
+</beans>

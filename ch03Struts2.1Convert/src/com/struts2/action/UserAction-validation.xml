@@ -1,0 +1,15 @@
+<!DOCTYPE validators PUBLIC
+"-//OpenSymphony Group//XWork Validator 1.0//EN"
+"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+  <!-- 檢查使用者名稱 -->
+  <field name="username" >
+    <field-validator type="requiredstring" >    <!-- 必需的 -->
+      <param name="true" >true</param>          <!-- 檢查時去掉前後空白 -->
+      <message>請輸入使用者名稱</message>       <!-- 提示資訊 -->
+    </field-validator>
+  </field>
+  
+</validators>

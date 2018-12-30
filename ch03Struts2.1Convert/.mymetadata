@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="ch03Struts2.1Convert"
+  id="myeclipse.1352969964532"
+  context-root="/ch03Struts2.1Convert"
+  j2ee-spec="5.0"
+  archive="ch03Struts2.1Convert.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

@@ -1,0 +1,44 @@
+
+
+
+     攔截器(Interceptor)：是動態攔截 Action 呼叫的物件，類似於 Servlet 中的篩檢程式。
+ 在執行 Action 呼叫的物件，類似於 Servlet 中的篩檢程式。在執行 Action 的 execute() 方法之前，
+ Struts2.x 會首先執行在 struts.xml 中參考的攔截器。所以說，攔截器提供了一種機制，
+ 使開發者可以在一個 Action 前後執行需要的程式碼，可以在一個 Action 執行前阻止其執行，
+ 也可以在 Action 執行後做一些相應的工作，同時還提供一種可以分析 Action 中可重用部份的方式。
+
+
+    攔截器(Interceptor) AOP (Aspect-Oriented Programming，剖面導向程式設計)的一種實現策略，
+如果說物件導向程式設計是將需求功能劃分為不同的、相對獨立的和封裝良好的類別，並使它們有著屬於自己的行為，
+依靠繼承和多形等來定義彼此的關係、那麼剖面導向程式設計則是將通用需求功能從不相關的類別分離出來，
+使得很多類別共用一個行為，一旦發生變化，不必修改很多類別，只需修改這個行為即可。
+
+    Struts2.x 攔截器體系正是應用了 AOP 設計哲學，可以動態攔截 Action 呼叫的物件，開發者只需要提供攔截器的實現類別，
+並將其設定在 struts.xml 檔案中即可。
+
+
+
+ 《使用者帳號驗證頁面》
+   http://3w.eztravel.com.tw:8080/ch02Struts2.1Iterceptor/interceptorNS/default.action
+
+
+ 《文字過濾攔截器》
+   http://3w.eztravel.com.tw:8080/ch02Struts2.1Iterceptor/interceptorNS/public.action
+  
+
+ 《攔截器方法過濾》
+   http://3w.eztravel.com.tw:8080/ch02Struts2.1Iterceptor/interceptorNS/method.action
+
+
+ 《攔截器方法過濾》
+   http://3w.eztravel.com.tw:8080/ch02Struts2.1Iterceptor/interceptorNS/orderBy.action
+
+
+ 《攔截器結果監聽器》
+   http://3w.eztravel.com.tw:8080/ch02Struts2.1Iterceptor/interceptorNS/listener.action
+   
+   
+ 《耗時攔截器設定》
+   http://3w.eztravel.com.tw:8080/ch02Struts2.1Iterceptor/interceptorNS/timer.action
+   
+   

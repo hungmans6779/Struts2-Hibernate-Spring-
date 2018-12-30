@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+
+<struts>
+
+
+  <!-- 
+     也可以寫在 struts.properties (開始)
+  
+     constant 設定 Struts2.x 屬性，與 struts.properties 作用是一樣的。
+   -->
+
+  <!--  開發模式  -->
+  <constant name="struts.devMode" value="true" />
+ 
+  <!-- Struts2.x Action 副檔名  -->
+  <constant name="struts.action.extension" value="action" /> 
+
+  <!-- 國際化(i18n:internationalization)資源編碼設定 --> 
+  <constant name="struts.i18n.encoding" value="utf-8" />
+  
+  <!-- 國際化(i18n:internationalization)資源設定 -->
+  <constant name="struts.custom.i18n.resources" value="globalMessages"  />
+   
+  <!-- 
+     設定是否每次 HTTP 請求到達時，系統都重新載入資源檔。該屬性的預設值為 false。
+     在開發階段將屬性設定為 true 會更有利於開發，但在產品發佈階段應該設定為 false。
+  -->  
+  <constant name="struts.i18n.reload" value="true" />
+ 
+  <!-- 把值設為spring，表示該Action 是由  Spring 產生。 -->
+  <constant name="struts.objectFactory"  value="spring" />  
+   
+  <!-- 也可以寫在 struts.properties (結束) -->
+    
+
+
+
+  
+  <!--  參考預設 Struts2.x 配置檔案 -->  
+  <include file="struts-default.xml" />
+    
+  
+  
+  
+  
+  
+  <package name="user" extends="struts-default" namespace="/namespace1"  >
+
+    <!-- 設定全域結果檢視 -->
+    <global-results>
+      <result name="input" >/index.jsp</result>
+    </global-results>
+    
+    
+    <!-- register 用登註冊 (改由 src\applicationContext.xml  的設定呼叫 ) -->
+    <action name="register" class="RegisterAction" >
+      <result name="input"   >/jsp/struts2/register.jsp</result>
+      <result name="success" >/index.jsp</result>
+    </action>
+
+
+
+    <!-- login 用戶登入 (改由 src\applicationContext.xml  的設定呼叫 )  -->
+    <action name="login" class="LoginAction" >
+      <result name="input" >/index.jsp</result>
+      <result name="success" >/jsp/struts2/home.jsp</result>
+    </action>
+    
+    
+    
+    <!-- myFoldersAction 我的相冊 (改由 src\applicationContext.xml  的設定呼叫 )  -->
+    <action name="myFolders"  class="myFoldersAction" >
+      <result name="success" >/jsp/struts2/myFolders.jsp</result>
+    </action>
+    
+    
+    <!-- newFolderAction 新增相簿 (改由 src\applicationContext.xml  的設定呼叫 ) -->
+    <action name="newFolder" class="newFolderAction" >
+      <result name="input"   >/jsp/struts2/newFolders.jsp</result>
+      <result name="success" >/jsp/struts2/newFolders.jsp</result>  
+    </action> 
+    
+    
+    <!-- PhotoesAction 某一相簿內的圖片展示 (改由 src\applicationContext.xml  的設定呼叫 )  -->
+    <action name="photoes" class="PhotoesAction" >
+      <result name="success" >/jsp/struts2/photoes.jsp</result>
+    </action> 
+    
+    
+    
+    
+    
+    <!-- MyUpAction 上傳圖片 (改由 src\applicationContext.xml  的設定呼叫 )  -->
+    <action name="upAction" class="MyUpAction" >
+      <interceptor-ref name="fileUpload" >
+        <param name="allowedTypes">image/pgn,image/gif,image/jpeg</param>
+        <param name="maximumSize">90000000</param>
+      </interceptor-ref>
+      <interceptor-ref name="defaultStack" />
+      <result name="input" >/jsp/struts2/up.jsp</result>
+      <result name="success" type="redirect" >/namespace1/folderName.action</result>
+    </action>
+      
+      
+      
+      
+    <!-- FolderNameAction 上傳圖片 -->
+    <action name="folderName" class="FolderNameAction" >
+      <result name="success" >/jsp/struts2/up.jsp</result>
+    </action>  
+    
+    
+    
+    <!-- 刪除某一圖片資料匣 -->
+    <action name="deleteFolder" class="DeleteFolderAction" >
+      <result name="success" type="redirect" >/namespace1/myFolders.action</result>
+    </action>
+    
+    
+    <!-- 刪除某一張圖片 -->
+    <action name="deletePic" class="DeletePicAction" >
+      <result name="suceesss" type="redirect" >/namespace1/photoes.action</result>
+    </action>
+    
+    
+    
+    
+  </package>  
+ 
+ 
+ 
+</struts>    

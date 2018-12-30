@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<!-- 
+   	管理者登入 Action 設定檔，該檔案和 AdminLoginAction 類別檔案相對應，實現管理者登入驗證
+   《欄位驗證器》設定風格  
+-->
+
+<validators>
+
+  <!-- 驗證 username 屬性 -->
+  <field name="adminname" >
+	<!-- 指定 username 屬性不能為空 -->
+	<field-validator type="requiredstring" >
+	  <param name="trim" >true</param>
+	  <message key="username.notnull" />
+	</field-validator>
+  </field>
+	
+	
+  <!-- 驗證 password 屬性 -->
+  <field name="password" >
+	<!-- 指定 password 屬性不能為空 -->
+	<field-validator type="requiredstring" >
+	  <param name="trim" >true</param>
+	  <message key="password.notnull" />
+	</field-validator>
+  </field>
+  
+  
+</validators>

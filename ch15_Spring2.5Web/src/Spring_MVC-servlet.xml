@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+
+  <!-- 
+     控制器是 MVC 設計模式的一部份(確切地說，是 MVC 中的 C )。應用程式的行為通常被定義為服務介面，而控制器使得使用者可以存取應用程式所提供的服務。
+     控制器解析使用者輸入，並將其轉換成合理的模型資料，從而可以進一步由檢視展示給使用者。
+     Spring 以一種抽象的方式實現了控制器的朸概念，這樣可以支援不同型態的控制器。
+     Spring 本身包含表單控制器、指令控制器、精靈型控器等多種控制器。 
+  -->
+  
+  
+  
+  
+  
+  
+  <!-- 設定控制器 -->
+  <bean name="/index.mvc" class="com.spring.mvc.handler.IndexController" >
+    <property name="sayHello" value="Spring_MVC,歡迎您的到來！！！"  />
+  </bean>
+
+
+
+  <bean name="/indexException.mvc" class="com.spring.mvc.handler.IndexExceptionController" >
+    <property name="sayHello" value="Spring_MVC_Exception,歡迎您的到來！！！"  />
+  </bean>
+  
+    
+    
+  <bean name="index1Controller" class="com.spring.mvc.handler.Index1Controller" >
+    <property name="sayHello" value="Spring_MVC(1),歡迎您的到來！！！"  />
+  </bean>
+  
+    
+    
+  <!-- 
+    實作指令控制器 AbstractCommandController 
+  
+    在 Web 存取中，透過一個或者多個參數使系統傳回特定的結果很常見。例如，根據使用者的 id 來檢視該使用者的個人資訊。
+    
+    透過擴充 AbstractCommandController 可以很容易建構出滿足這類別需求的控制器，它能從請求中抽取參數並將其綁定到指令物件中，
+    控制器只需要根據指令物件進行業務邏輯的控制就可以了。 
+    
+  -->
+  <!--  使用 BeanNameUrlHandlerMapping -->
+  <!--
+  <bean name="/userCommand.mvc" class="com.spring.mvc.handler.command.UserController" >
+    <property name="userService" >
+      <bean class="com.spring.mvc.handler.command.service.UserService" ></bean>
+    </property>
+  </bean> 
+  -->
+  <!-- 使用 SimpleUrlHandlerMapping -->
+  <bean name="userCommandController" class="com.spring.mvc.handler.command.UserCommandController" >
+    <property name="userService" ref="userService" />
+  </bean> 
+
+
+
+
+
+
+
+  
+  <!-- 
+    實作表單控制器及驗證器 (SimpleFormController)
+    
+    大多數 Web 應用都會遇到需要填寫表單的頁面，當表單傳送成功後，表單的資料會被傳送到 Web 伺服器中處理。
+    處理成功後導向一個成功頁面，如果操作失敗則導向一個錯誤報告頁面。
+    此外，在表單資料處理之前還會進行表單資料的驗證，保證用戶端傳送的表單資料是合法有效的，
+    如果資料不合法，則請求傳回到原表單頁面中，以便使用者根據錯誤資訊進行修改。
+  -->
+  <bean name="regController" class="com.spring.mvc.handler.simpleForm.RegController" >
+    <property name="userService" ref="userService" />
+    
+    <!-- 
+      在建構方法內，透過指定表單物件的型態，以便控制器自動將表單資料綁定到表單物件中，也可以直接在設定檔中透過 commandClass 屬性進行設定。
+    -->
+    <property name="commandClass" value="com.spring.mvc.model.User" />   <!-- 設置指令對象，也稱為表單物件  -->
+    <property name="formView"     value="handler/reg/reg"           />   <!-- 表單輸入頁面 -->
+    <property name="successView"  value="handler/reg/regSuccess"    />   <!-- 註冊成功頁面 -->
+    
+    <!-- 
+      驗證表單資資料
+      當 RegController 呼叫 UserService 的 regUser() 方法註冊使用者時，確保 User 物件資料的合法性非常重要，
+      因為使用者的使用者名稱不應和已經存在的使用者名稱相同。
+      org.springframework.validation.Validator 介面為 Spring MVC 提供了資料合法性驗證功能。
+    -->
+    <property name="validator" >
+      <bean class="com.spring.mvc.validator.UserValidator" />            <!-- 設定驗證器 -->
+    </property>
+  </bean>
+
+
+
+
+
+
+
+  
+  <!-- 
+    實作多動作控制器 (MultiActionController)
+    
+    ※ 使用 ParameterMethodNameResolver 時，透過 method 參數指定目標方法名。
+    
+    在使用 Spring 控制器時， AbstractController 和 SimpleFormController 是應用得最多的。
+    AbstractController 是最基本的 Controller，可以給予使用者大的靈活性。
+    SimpleFormController 則用於典型的表單編輯和傳送。
+    在一個需要增、刪、改、查的需求中，增加和修改透過擴充 SimpleFormController 完成。
+    刪除和查詢則可以透過擴充 AbstractController 完成。
+    
+    完成某一業務物件的増、刪、改、查，都屬於一個種相關的業務。把一種相關的操作分佈到不同的類別去完成，違反"高內聚"的設計原則。
+    這樣 4個業務操作需要4個類別來完成，形成太多的類別檔案，難以維護和設定。
+    而 Spring MVC 在一開始就提供了可以完成多動作的 MultiActionController 。 
+    MultiActionController 是一個特殊的控制器，可以在同一個控制器中實現多個動作，每個動作分屬不同的方法。
+    例如，增加使用者可以對應 addUser() 方法，刪除使用者可以對應 deleteUser() 方法。
+    
+    
+    設定方法名解析器 
+      
+      MultiActionController 預設採用 InternalPathMethodNameResolver 進行方法名解析，它根據 URL 檔案名直接進行方法映射。
+      負責方法映射的介面是 MethodNameResolver ，該介面還有另外兩個實現類別。
+     
+      ★ ParameterMethodNameResolver：根據請求中的參數解析方法名。
+      ★ PropertiesMethodNameResolver：根據一個鍵值清單解析方法名。
+    
+      使用 ParameterMethodNameResolver 時，透過 method 參數指定目標方法名。
+      例如：http://localhost:8080/ch15_Spring2.5Web/addUser.mvc?username=kevin&password=1234&method=addUser
+            username 參數：使用者名稱
+            password 參數：使用者密碼
+            method   參數：目標方法名稱為 addUser(XXXX,XXXX);
+            
+    a.新增使用者
+      http://localhost:8080/ch15_Spring2.5Web/addUser.mvc?username=kevin&password=1234&method=addUser
+
+    b.刪除使用者
+      http://localhost:8080/ch15_Spring2.5Web/deleteUser.mvc?id=1  
+  -->
+  <bean name="/addUser.mvc" class="com.spring.mvc.handler.multiAction.UserMultiActionController" >
+    <property name="userService"        ref="userService"         />
+    <property name="methodNameResolver" >
+      <bean class="org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver" >
+         <property name="paramName" value="method" />
+      </bean>
+    </property>
+  </bean>
+  
+  <bean name="/deleteUser.mvc" class="com.spring.mvc.handler.multiAction.UserMultiActionController" >
+    <property name="userService" ref="userService" />
+  </bean>
+
+
+
+
+
+
+
+  
+  <!-- 
+    實作多動作控制器 (MultiActionController)
+    
+    ※ 使用 PropertiesMethodNameResolver：根據一個鍵值清單解析方法名。
+
+    在使用 Spring 控制器時， AbstractController 和 SimpleFormController 是應用得最多的。
+    AbstractController 是最基本的 Controller，可以給予使用者大的靈活性。
+    SimpleFormController 則用於典型的表單編輯和傳送。
+    在一個需要增、刪、改、查的需求中，增加和修改透過擴充 SimpleFormController 完成。
+    刪除和查詢則可以透過擴充 AbstractController 完成。
+    
+    完成某一業務物件的増、刪、改、查，都屬於一個種相關的業務。把一種相關的操作分佈到不同的類別去完成，違反"高內聚"的設計原則。
+    這樣 4個業務操作需要4個類別來完成，形成太多的類別檔案，難以維護和設定。
+    而 Spring MVC 在一開始就提供了可以完成多動作的 MultiActionController 。 
+    MultiActionController 是一個特殊的控制器，可以在同一個控制器中實現多個動作，每個動作分屬不同的方法。
+    例如，增加使用者可以對應 addUser() 方法，刪除使用者可以對應 deleteUser() 方法。
+           
+    a.新增使用者
+      http://localhost:8080/ch15_Spring2.5Web/addUser2.mvc?username=kevin&password=7788578
+
+    b.刪除使用者
+      http://localhost:8080/ch15_Spring2.5Web/deleteUser2.mvc?id=3
+      
+    以下設定檔只是映射 addUser2.mvc 和 deleteUser2.mvc 所對應的方法名分別為 addUser 和 deleteUser 。
+    而實際處理這兩個請求的控制器還需要映射到 SimpleUrlHandlerMapping 的設定檔內。
+  -->
+  <bean name="userMethodNameResolver_MultiActionController" class="com.spring.mvc.handler.multiAction.UserMultiActionController" >
+    <property name="userService"        ref="userService"         />
+    <property name="methodNameResolver" >
+      <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver" >
+        <property name="mappings" >
+          <props>
+            <prop key="/addUser2.mvc"    >addUser</prop>     <!-- 方法名稱 addUser  -->
+            <prop key="/deleteUser2.mvc" >deleteUser</prop>  <!-- 方法名稱 deleteUser  -->
+          </props>
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+
+
+
+
+
+
+  
+  <!-- 
+    使用 精靈控制器
+    
+    一個系統在使用者註冊模組中需要區別一般使用者和高級使用者，
+    一般使用者只提供最簡單的資訊，透過一個小表單就可以註冊了。
+    但對於需要註冊為高級使用者來說，這些使用者一般情況下都是付費的，經營商希望他們提供詳細的註冊資訊，除了使用者名稱、密碼、Email 這些最簡單的資訊外，
+    還需要提供住址、電話以及興趣愛好之類別的調查資訊，透過一請張大表單讓註冊者一次填寫所有這些資訊並不是一個好主意，大部份潛在的使用者當看到這樣的"超級表單"
+    後都會亳不猶豫地放棄註冊，這時透過一個精靈式的表單讓使用者分步填寫註冊資訊將是明智的方案，雖然需要填寫的信息量不變，但根據心理學的經驗，
+    使用者會在第一感覺簡單的心理暗示下慢慢進入開發人員設定的"圈套"中，高級使用者註冊所填寫的資訊分解到3個表單中，並以精靈方式分步完成。
+    (1) 填寫使用者名稱、密碼、E-mail 等一般資訊。
+    (2) 填寫地址、電話等關聯資訊。
+    (3) 填寫使用者興趣愛好和調查資訊。
+  -->
+  <bean name="/register.mvc" class="com.spring.mvc.handler.wizardForm.UserRegWizardFormController" >
+    <property name="userService" ref="userService" />
+    <!-- 
+      在建構方法內，透過指定表單物件的型態，以便控制器自動將表單資料綁定到表單物件中，也可以直接在設定檔中透過 commandClass 屬性進行設定。
+    -->
+    <property name="commandClass" value="com.spring.mvc.model.FullUser"                                                 />   <!-- 設置指令對象，也稱為表單物件    -->
+    <property name="pages"        value="handler/wizardForm/reg,handler/wizardForm/contact,handler/wizardForm/survey"   />   <!-- 精靈鏈頁面邏輯名，由逗號隔開  -->
+    <property name="cancelView"   value="handler/wizardForm/main"                                                       />   <!-- 取消後轉向的檢視 -->
+    <property name="successView"  value="handler/wizardForm/success"                                                    />   <!-- 精靈處理成功後轉向的檢視 -->
+  </bean>
+
+
+
+
+
+
+
+  
+  <!-- 
+     參數映射控制器和檔案名映射控制器
+    
+     在處理 URL 請求轉發時，透過實現某個介面並重新定義裡面的某個某個方法傳回一個ModelAndView() 來實現頁面轉向，
+     可是如果一個不用任何處理的請求也為其寫一個不用任何處理的請求也為其寫一個只有一行的類別，則不太好，
+     所以就需要用到 Spring 裡的參數映射控制器(ParameterizableViewController)。    
+     
+     透過設定 viewName 屬性指定傳回 ModelAndView 物件的邏輯檢視名，這樣就可以避免建立僅包含一行程式碼的 Controller 實現類別。
+     經過這樣的設定，在瀏覽器位址欄中輸入 http://localhost:8080/ch15_Spring2.5Web/urlParameterizable.mvc 就會直接到指定目錄下的 urlParameterizable.jsp 頁面了。
+  -->
+  <bean name="/urlParameterizable.mvc" class="org.springframework.web.servlet.mvc.ParameterizableViewController" >
+    <property name="viewName" value="handler/parameterizable/urlParameterizable" />
+  </bean>
+
+
+
+
+
+
+
+  
+  <!-- 
+    檔案名控制器 
+    
+    參數映射控制器 設定多了，設定檔就會變成得臃腫，所以要用到檔案名映射控制器(UrlFilenameViewController) 。
+    
+    映射到 org.springframework.web.servlet.handler.SimpleUrlHandlerMapping 的設定內。
+  -->
+  <bean id="fileNameController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" >
+    <!-- 字首 -->
+    <property name="prefix" >
+      <value>handler/fileName/</value>  <!-- 表示以 Web 根目錄開始 -->
+    </property>
+  </bean>
+
+
+
+
+
+
+
+  
+  <!-- 
+    檔案上傳控制器
+  -->
+  <bean name="/upload.mvc" class="com.spring.mvc.handler.upload.UploadController" >
+    <property name="userService"   ref="userService" />
+    <property name="commandClass"  value="com.spring.mvc.handler.upload.UploadBean" />  <!-- 表單所使用的物件 -->
+    <property name="formView"      value="handler/upload/uploadFile"                />  <!-- 上傳頁面 -->
+    <property name="successView"   value="handler/upload/uploadSuccess"             />  <!-- 上傳成功頁面 -->
+  </bean>
+
+
+
+
+
+  
+  <!-- 
+    Tiles 控制器
+  -->
+  <bean name="/about.mvc" class="com.spring.mvc.handler.tiles.AboutController" />
+  
+
+</beans>

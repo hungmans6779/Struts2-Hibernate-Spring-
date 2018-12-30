@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+ <!-- 
+   自動裝配型態：
+   (1) byName： 根據屬性名自動裝配。此選項將檢查容器並根據名稱尋找與屬性完全一致的Bean，並將其與屬性自動裝配。
+                例如，在Bean 定義中 autowire 設定為 byName ，而該 Bean 包含 master屬性(同時提供 setMaster() 方法)，
+                Spring 就會尋找名為 master 的 Bean 定義，並將它裝配給 master 屬性。 
+                
+   (2) byType： 如果容器中存在一個與指定屬性型態相同的 Bean，那麼將與該屬性自動裝配。如果存在多個該型態的 Bean，那麼將會拋出例外，
+                並指出不能使用 byType 方式進行自動裝配。若沒有找到相比對的Bean ，則什麼事都不發生，屬性也不會被設定。
+                如果不希望這樣，那麼可以透過設定 dependency-check="object" 使 Spring 拋出例則。
+   
+   (3) constructor：與 byType 的方式類似，不同之處在於它應用於建構元參數。如果在容器中沒有找到與建構元參數型態一致的，那麼會拋出例則。
+   
+   (4) autodetect：透過Bean 類別的自省機制決定使用 constructor 還是 byType 方式進行自動裝配。如果發現預設的建構元，那麼將使用 byType 方式。
+   
+   
+ 
+ -->
+
+ <bean id="stoneAxe"   class="com.spring.dao.impl.StoneAxe" /> 
+ <bean id="steelAxe"   class="com.spring.dao.impl.SteelAxe" /> 
+ <bean id="glodAxe"    class="com.spring.dao.impl.GlodAxe" /> 
+ <bean id="woodAxe"    class="com.spring.dao.impl.WoodAxe" /> 
+  
+  
+  <!--  《設值植入及建構植入》的方式 - 按型態比對導入參數   -->
+  <bean id="chinese01"  class="com.spring.service.impl.Chinese01" >
+    <!-- 按型態比對導入參數  -->
+    <constructor-arg type="java.lang.String" >
+      <value>自由人</value>
+    </constructor-arg>
+    <constructor-arg type="int">
+      <value>35</value>
+    </constructor-arg>
+    <property name="axe" >
+      <ref bean="stoneAxe" />
+    </property>
+  </bean>
+  
+  <!--  《設值植入及建構植入》的方式 - 按索引比對導入參數   -->
+  <bean id="american01"  class="com.spring.service.impl.American01" >
+    <!-- 按索引比對導入參數  -->
+    <constructor-arg index="0" value="kevin" />
+    <constructor-arg index="1" value="35"    />
+    <property name="axe" ref="steelAxe" />
+  </bean>  
+
+
+  <!--  《設值植入及建構植入》的方式 - 按索引比對導入參數 及 型態比對導入參數 混合使用  -->
+  <bean id="european01"  class="com.spring.service.impl.European01" >
+    <!-- 按索引比對導入參數 及 型態比對導入參數 混合使用  -->
+    <constructor-arg index="0" type="java.lang.String" value="歐洲人" />
+    <constructor-arg index="1" type="int" value="40"    />
+    <property name="axe" ref="glodAxe" />
+  </bean>  
+
+
+  <!--  《設值植入及建構植入》的方式 - 自動裝配   -->
+  <bean id="african01"  class="com.spring.service.impl.African01" autowire="autodetect" >
+    <!-- 按索引比對導入參數 及 型態比對導入參數 混合使用  -->
+    <constructor-arg index="0" type="java.lang.String" value="非洲人"  />
+    <constructor-arg index="1" type="int" value="55"                   />
+    <!-- 使用自動裝配的方式 -->
+    <!-- 
+    <constructor-arg index="2" type="com.spring.dao.impl.WoodAxe" ref="woodAxe" />
+    -->
+  </bean>  
+
+</beans>

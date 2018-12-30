@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+ 
+ 
+  <!-- 
+  《欄位驗證器》設定風格
+  <field name="被驗證的欄位" >
+    <field-validator type="驗證器型態名" >
+      <param name="參數名" >參數值</param>
+      <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+    </field-validator>
+  </field>
+  -->
+  
+  
+  <field name="name" >                        <!-- 指定屬性為 name  -->
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態  -->
+      <message>姓名不能為空！！！</message>   <!-- 驗證失敗時輸出資訊 -->
+    </field-validator>
+  </field>
+  
+  <field name="pass" >                        <!-- 指定屬性為 pass  -->
+    <field-validator type="requiredstring" >  <!-- 定義驗證型態  -->
+      <message>密碼不能為空！！！</message>   <!-- 驗證失敗時輸出資訊 -->
+    </field-validator>
+  </field>
+  
+</validators>

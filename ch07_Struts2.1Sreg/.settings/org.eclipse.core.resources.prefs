@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//src/com/admin/action/AdminLoginAction.java=UTF-8
+encoding//src/com/dao/database/dataBase.properties=UTF-8
+encoding//src/com/user/action/UpdateAction-validation.xml=UTF-8
+encoding//src/com/user/dao/UsersDAO.java=UTF-8
+encoding//src/com/util/interceptor/AuthorityInterceptor.java=UTF-8

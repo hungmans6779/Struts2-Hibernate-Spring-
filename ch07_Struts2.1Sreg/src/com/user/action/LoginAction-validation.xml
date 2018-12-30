@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<!-- 
+   登入使用者 Action 設定檔，該檔案和 LoginAction 類別檔案相對應，實現使用者登入驗證
+  
+  
+  《欄位驗證器》設定風格  
+-->
+<validators>
+ 
+  <!-- 驗證 用戶名 username 屬性 -->
+  <field name="username" >
+  
+    <!-- 指定 username 屬性不能為空 -->
+	<field-validator type="requiredstring" >
+	  <param name="trim" >true</param>
+	  <message key="username.notnull" />
+	</field-validator>
+
+    <!-- 指定 username 屬性必須比對正則表達式 -->
+    <field-validator type="regex" >
+      <param name="expression" ><![CDATA[(\w{4,25})]]></param>
+      <message key="username.length" />
+    </field-validator>
+    
+  </field>
+
+	
+	
+  <!-- 驗證 密碼 password 屬性 -->
+  <field name="password">
+  
+	<!-- 指定 password 屬性不能為空 -->
+    <field-validator type="requiredstring">
+	  <param name="trim" >true</param>
+	  <message key="password.notnull" />
+	</field-validator>
+		
+	<!-- 指定 password 屬性必須比對正則表達式 -->
+	<field-validator type="regex" >
+	  <param name="expression" ><![CDATA[(\w{4,25})]]></param>
+	  <message key="password.length" />
+	</field-validator>
+	
+  </field>
+	
+
+</validators>

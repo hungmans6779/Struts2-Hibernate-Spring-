@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC 
+		"-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN" 
+		"http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+  
+  <definition name="template" template="/WEB-INF/jsp/tiles/template.jsp" >
+    <put name="title"  type="string"   value="窗內網論壇" />                      <!-- 標題 -->
+    <put name="header" type="template" value="/WEB-INF/jsp/tiles/header.jsp" />   <!-- 頁標頭檔 --> 
+    <put name="body"   type="template" value="/WEB-INF/jsp/tiles/blank.jsp"  />   <!-- 內容檔案 -->
+    <put name="footer" type="template" value="/WEB-INF/jsp/tiles/footer.jsp" />   <!-- 頁尾檔案 -->
+  </definition>
+  
+  <definition name="about" extends="template" >
+    <put name="title" type="string" value="關於窗內網"     />                     <!-- 標題 -->
+    <put name="body"  value="/WEB-INF/jsp/tiles/about.jsp" />                     <!-- 內容檔案 -->
+  </definition>
+  
+</tiles-definitions>

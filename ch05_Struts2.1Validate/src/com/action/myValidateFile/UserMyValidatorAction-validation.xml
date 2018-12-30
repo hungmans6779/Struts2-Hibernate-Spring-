@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<!-- 
+    自訂驗證器 
+    <field-validator  type="test" ： 參考 src 目錄下的 validators.xml 的自訂驗證器 com.validator.MyValidator 
+-->
+<validators>
+
+  <field name="userName" >                             <!-- 指定屬性為 userName  -->
+    <field-validator type="test" >                     <!-- 定義驗證型態  -->
+      <param name="str" >kevin</param>                 <!-- 檢查時去掉前後空白 -->
+      <message>使用者名稱必須為 kevin</message>        <!-- 驗證失敗時輸出資訊 -->
+    </field-validator>
+  </field>
+ 
+</validators>

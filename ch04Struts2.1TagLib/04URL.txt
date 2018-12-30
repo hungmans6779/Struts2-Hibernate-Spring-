@@ -1,0 +1,268 @@
+  
+   第四章 Action 和 型態轉換
+
+       JSTL(JSP Standard Libary ，JSP 標準標籤函式庫) 和 Struts1.x 標籤程式庫相比，有了巨大的改進。
+   Struts2.x 也支援 JSTL ，而且還支援更加強大的運算式語言 OGNL(Object - Graph Navigation Language，物件導向語言)。
+   Struts2.x 標籤程式庫所提供的標籤不但全面而且功能強大，其絕大部份標籤不相依於任何表現層技術。 
+  
+  
+  
+  
+  
+   《UI》 標籤：
+    
+     一般來說，可以將表單標籤的通用屬性分成3種，分別是模版屬性、JavaScript 相關屬性和通用屬性。
+     
+     1.模版屬性：
+       (1) templateDir：用來指定標籤使用的模版檔案的目錄。
+       (2) theme      ：用來指定標籤使用的主題。
+       (3) template   ：用來指定籤使用的模版。
+      
+           ※ theme 屬性的可選值：simple、ajax、css_xhtml和xhtml。
+                                  預設情況下 xhtml、實際每個屬性值表示產生什麼效果，可以透過為form 表單設定 theme 屬性、分別觀察其顯示結果。
+     
+     
+      2.JavaScript 的相關屬性：
+      tooltip 相關屬性，用來為表單元素設定提示資訊，當將滑鼠懸停在相應元素上時，就會出現提示內容。tooltip 的相關屬性很多，
+                        包括 tooltip、tooltipIcon、tooltipBorderColor、tooltipFontColor 和 tooltipFontSize 等。
+      
+      
+      3.通用屬性：
+       a. title        ：用來設定表單元素的title 屬性。
+       b. disabled     ：用來設定表單元素是否可用。
+       c. label        ：用來設表單元素的 label 屬性。
+       d. labelPosition：用來設定表單元素 label 顯示的位置，可接受的值有top 和 left。
+       e. name         ：用來設定表單元素的 name，該屬性值與 Action 中的屬性名相對應。
+       f. value        ：用來設定表單元素的值。
+   
+   
+   
+   
+     2.非表單標籤：主要包含一些常用的功能標籤，例如顯示日期或者樹狀選單。
+      (1) actionerror
+      (2) actionmessage
+      (3) component
+      (4) tree
+      (5) treenode
+ 
+   
+    
+   
+   
+   《非UI》 標籤：
+    1.邏輯控制標籤：主要用於進行條件和迴圈等流程控制。
+      (1) if       ：用於控制選擇輸出的標籤。
+      (2) elseif   ：與 if 結合使用。
+      (3) else     ：與 if 結合使用。
+      (4) append   ：用於將多個集合合併成一個新集合。
+      (5) generator：用於將一個字串解析成一個集合。
+      (6) iterator ：這是一個反覆運算，用於將集合進行迴圈輸出。
+      (7) merge    ：與 append 標籤一樣，用於將多個集合合併成一個新集合，但方式有所不同。
+      (8) sort     ：用於對集合進行排序。
+      (9) subset   ：用於截取集合的一部份，形成一個新的子集合。
+      
+         
+    2.資料標籤：主要用於進行資料儲存和處理(用來實現獲得或存取各種資料的功能)。 
+      (1) action  ：用於在 JSP 頁面中直接呼叫一個 Action。
+      (2) bean    ：用於建立一個 JavaBean 實例。
+      (3) debug   ：用於產生一個連結，透過這個連結，可以檢視目前 ValueStack 和 StackContext 中的內容。
+      (4) i18n    ：用於指定國際化資源檔。
+      (5) include ：用於在 JSP 頁面中包含其他資源。
+      (6) param   ：用於設定一個參數，通常用做 bean 標籤和 url 標籤的子標籤。
+      (7) property：用於輸出某個值。
+      (8) set     ：用於設定一個新變數。
+      (9) text    ：用於輸出國際化訊息。
+     (10) url     ：用於產生一個 URL 位址。
+     (11) date    ：用於格式化輸出一個日期。
+ 
+
+      
+      
+      
+
+
+
+  
+  
+  《非UI》 標籤：【邏輯控制標籤】：主要用於進行條件和迴圈等流程控制
+  
+  《if》
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/ifTag.jsp
+ 
+  《iterator》：這是一個反覆運算，用於將集合進行迴圈輸出
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/iterator.jsp
+ 
+  《iterator - 進階運用》：這是一個反覆運算，用於將集合進行迴圈輸出
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/kongzhiTag.jsp
+   
+  《append》：用於將多個集合合併成一個新集合
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/append.jsp
+   
+  《merge》：與 append 標籤一樣，用於將多個集合合併成一個新集合，但方式有所不同。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/merge.jsp  
+   
+  《append 及 merge》：merge與 append 標籤一樣，比較方式不同之處。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/appendVsMerge.jsp
+
+  《generator》：用於將一個字串解析成一個集合。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/generator.jsp  
+   
+  《subset》：用於截取集合的一部份，形成一個新的子集合。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/subset.jsp  
+    
+  《sort》：用於對集合進行排序。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/controlTag/sort.jsp 
+
+
+
+  
+
+
+ 
+
+
+ 
+  《非UI》 標籤：【資料標籤】：主要用於進行資料儲存和處理(用來實現獲得或存取各種資料的功能)。 
+ 
+  《action》：用於在 JSP 頁面中直接呼叫一個 Action。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/tag1.action
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/tag2.action
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/dataTag/action.jsp?name=kevin
+ 
+
+  《bean》：用於建立一個 JavaBean 實例
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/dataTag/bean.jsp
+   
+  《debug》：用於產生一個連結，透過這個連結，可以檢視目前 ValueStack 和 StackContext 中的內容。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/dataTag/debug.jsp 
+
+  《include》 ：用於在 JSP 頁面中包含其他資源。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/dataTag/include.jsp  
+
+  《param》：用於設定一個參數，通常用做 bean 標籤和 url 標籤的子標籤。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/dataTag/param.jsp  
+
+  《property》：用於輸出某個值。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/property.action
+ 
+  《set》：用於設定一個新變數，並把一個已有的變數值複製給這個新變數，同時可以把這個新蠻放到指定的範圍內，例如 application 範圍和 session 範圍等。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/dataTag/set.jsp  
+
+  《url》：用於產生一個 URL 位址，也可以透過嵌套 param 標籤來為 URL 指定發送參數。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/dataTag/url.jsp 
+   
+  《date》：用於格式化輸出一個日期，還可以計算指定時間到目前時間的時差。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/date.action
+
+
+
+
+
+
+
+
+ 
+  《UI》 標籤：【表單標籤】： 主要用於產生 HTML 中的表單  
+ 
+  《theme：simple》
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/UITag/simple.jsp
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/addUser.action
+   
+   
+   
+  《checkboxlist》：主要用來根據 list 屬性指定的集合一次建立多個核對盒，即一次產生多個 HTML 表單標籤中的 <input type="checkbox" /> 。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/UITag/checkboxlist.jsp 
+   
+   
+   
+  《radio》：用來產生單選框，透過指定list、listKey、listValue 等屬性來產生HTML 元素，實際用法與 checkboxlist 標籤用法幾乎完全相同。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/UITag/radio.jsp  
+   
+   
+   
+  《comobobox》：使用comobobox 標籤時，會產生兩個元素，分別是單行文字方塊和下拉式選單。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/UITag/combobox.jsp 
+
+
+
+  《select》：用來產生一個下拉式選單，透過為該標籤的 list 屬性指定一個集合可以產生下拉式選單的選項。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/select.action
+     
+     
+         
+  《doubleselect》：用來產生兩個相互關聯的下拉式選單，當選擇第1個下拉式選單的值時，第2個下拉式選單的內容會改變，
+                    這兩個下拉式選單是相互關聯的，相當於串聯下拉式清單。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/doubleselect.action
+ 
+ 
+ 
+  《optgroup》：用來產生選項群組，需要嵌套在 select 標籤中使用。在下拉式選單中可包含多個選項群組，
+                所以 select 標籤能包含多個 optgroup 標籤。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/optgroup.action
+ 
+  
+  
+  《datetimepicker》：可以產生一個動態日曆，當按一下文字方塊時就會產生出現日曆選擇框，
+                      從中可以選擇日期和時間，選擇日期和時間後，系統就會把選擇的日期和時間輸出到指定文字方塊中。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/datetimepicker.action
+
+   
+
+  《token》：主要用來防止使用者多次傳送表單，例如：沒有發送請求， 而重新傳回到相應頁面時的重複傳送。
+             該標籤不會在頁面上進行任何輸出，也沒有屬性，只是產生一個 HTML 隱藏欄位。每次載入該頁面時隱藏欄位的值都不同，
+             當從表單傳送請求時，攔截器會進行攔截，如果兩次請求時隱藏攔位的值相同就阻止表單被傳送。》
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/checkLogin.action  
+   
+   
+   
+  《updownselect》：與select 標籤非常相似，不同的是，updownselect 標籤在產生清單方塊時同時產生 3個按鈕，
+                    分別是表示上移、下移和全選。 
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/updownselect.action  
+    
+    
+    
+  《optiontransferselect》：與 updownselect 標籤非常相似，不同的是，optiontransferselect 標籤產生兩個清單方塊，
+                            在每個清單方塊中都可以對選項進行上移、下移和全選等操作，而且在這兩個清單方塊之間可以進行左移、右移和全選等操作。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/optiontransferselect.action  
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  《UI》 標籤：【非表單標籤】： 主要包含一些常用的功能標籤，例如輸出一些錯誤提示資訊，產生常用的樹狀結構等，
+                                這些標籤可以給程式開發帶來便捷。  
+ 
+  《actionerror、actionmessage》：輸出 Action 中的訊息。
+                                  (1) actionerror：輸出 Action 中的 getActionError()方法的傳回值。
+                                  (2) actionmessage：輸出 Action 中的  getActionMessage() 方法的傳回值。                              
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/ch04TagLibNS/actionerrorMessage.action
+      
+   
+   
+   
+  《component》：可以自訂群組物件，例如，當需要多次使用某段程式碼時，就可以考慮將這段程式碼定義成一個自訂群組組件，
+                 然後在頁面中使用 componet 標籤來呼叫自訂群組件。
+                 
+                 theme      ：用來指定自訂群組件所使用的主題，如果不指定該屬性，則預設使用 xhml 主題。
+                 templateDir：用來指定自訂群組件所使用的主題目錄，如果不指定該屬性，則預設使用 template 的目錄。
+                 template   ：用來指定自訂群組件所使用的模版檔案。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/NonUITag/componentTag.jsp 
+  
+
+  
+   
+  《tree、treenode》：主要用來產生一個樹狀結構，例如常見的樹狀選單和樹狀列表。
+                      其中， 
+                             tree     ：用來產生樹狀結構。
+                             treenode ：標籤用來產生樹狀結構中的節點。
+   http://3w.eztravel.com.tw:8080/ch04Struts2.1TagLib/form/tags/NonUITag/treeTag.jsp  
+   
+   
+  
+   

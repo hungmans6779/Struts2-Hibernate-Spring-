@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+
+
+<!-- 
+   struts.xml：主要負責管理 Web 應用中業務控制 Action 的映射，以及 Action 包含的 result 定義，
+               還有 Bean 的設定、常數的設定、Package 的設定和攔截器的設定等。
+               在預設情況下，Struts2.x 會自動載入 Web 應用 /WEB-INF/classes 目錄下的 struts.xml 檔案，
+               並對設定的資源進行掃描。
+-->
+<struts>  
+
+
+
+
+
+  <!-- 常數設定  -->
+  <!-- 
+        透過 struts.xml 檔案中的常數設定，可以指定 Struts2.x Framework 的屬性。其實這些屬性也可以在其他設定檔中指定，
+    例如在  web.xml 設定檔的 <init-param> 元素中可以指定常數； struts.properties 設定檔中的內容均可在 struts.xml 中載入(使用常數)，
+    反過來也就是說，stsruts.xml 檔案的常數也可以在 struts.properties 設定檔設定。
+    
+        Struts2.x 掃描常數的順序是：struts.xml 、struts.properties、web.xml，所以，如果在這3個檔案中對某個變數有重複的設定，
+    則後一個檔案中設定的常數值總會覆蓋前一個檔案常數的值。
+  -->
+  
+  
+  <!-- 
+         設定是否每次 HTTP 請求到達時，系統都重新載入資源檔。該屬性的預設值為false。
+     在開發階段將屬性設定為 true 會更有利於開發，但在產品發佈階段應該設定為false。
+   -->  
+  <constant name="struts.i18n.reload" value="true" />
+  
+  <!-- 
+        設定 struts2.x 應用是否使用開發模式。如果設定該屬性為 true，則 可以在應用出錯時顯示更多、更友善的出錯提示。
+    該屬性只接受 true 和 false 兩個值，該屬性的預設值是 false。
+    通常，在開發階段，將該屬性設定為 true，當進入產品發佈階段後，則將該屬性設定為 false。
+  -->  
+  <constant name="struts.devMode" value="false" />
+  
+  
+  
+
+  <!-- 包含檔案的設定 -->
+  <!-- 
+      ※ 觀察下載好的 Struts2.x Framework 附帶實例中的 struts.xml 檔案時，讀者可能已經發現，
+      大部份檔案並不是像人們想像的那樣：把大量的Action、Bean、常數、攔截器等都設定在 struts.xml 檔案中，
+      使此檔案變得臃腫而複雜。相反，struts.xml 檔案中並不是大量的 Action、package 等元素，
+      取而待之的卻是一些簡短清晰的 include 元素，甚至在一些情況下，僅有一些 include 元素。
+  -->
+  <!--
+    <include file="struts-chat.xml"    />
+    <include file="struts-hangman.xml" />
+  -->
+   
+   
+   
+   
+   
+
+  <!-- 
+    Bean 的設定
+    Struts2.x 是一個具有高度可擴充性的Framework ，其大部份的核心元件都不是以直接寫程式的方式寫在程式碼中的，
+    而是透過一個設定檔來植入到 Framework 中的。這樣，就使得這些核心元件具有可插可拔的功能，降低了程式碼的耦合度。
+    透過 struts.xml 檔案中設定的Bean ，把核心元件的一個實例植入到 Framework 中。當向 Framework 植入一個核心元件的實例時，
+    還需要告訴 Framework 這個實例的作用，也就是告訴 Framework 植入的此元件實現了哪個介面(介面通常用於定義植入的元件必須遵守的標準)。 
+  -->
+  <!-- 範例 -->
+  <!--
+    <bean type="元件實現的介面" name="Bean 實例的名字" class="自訂群組" />
+      class：這是一個必需的屬性，用來指定此設定的 Bean 對應的實現類別。
+      name：這是一個可選的屬性，用來指定 Bean 實例的名字，對於相同型態的多個 Bean ，它們的name 值不允許相同的。
+      type：這是一個可選的的屬性，用來指定 Bean 實例實現的 Struts2 的標準，如果設定的 Bean 作為 Framework 的一個核心元件來使用，
+            那麼就應該指定這個屬性的值。
+      scope：這是一個可選的屬性，用來指定 Bean 實例的作用範圍，其值只能是 default、singleton、request、session 與 thread 之一。 
+      static：這是一個可選屬性，用來指定 Bean 是否使用靜態方法植入，通常，當指定了type 屬性後，就不應該再把此屬性設定為true了。
+      optional：用來指定Bean 是否是一個可選的 Bean。
+  -->
+  <!-- 
+  <bean type="org.apache.struts2.view=ews.TagLibrary" 
+        class="com.company.my.ObjectFactory" name="myFactory" scope="default" /> 
+  -->
+   
+   
+   
+   
+   
+  <!-- 
+    package 設定：
+        透過 package 的設定，可以實現對某 package 中的所有 Action 的統一管理，如許可權的限制等。
+    在 struts.xml 檔案中的 package 是透過 package 元素來設定的。
+    可以看到 package 元素裡面有大量的 Action 和攔截器集合，
+    其實，Struts2.x Framework 就是使用了package 來管理 Action 與攔截器的。
+    設定 package 時必須指定 name 屬性，只有指定了這個屬性後此 package 才可以被參考，extends 屬性用來指定該 package 繼承其他的 package，
+    它的值必須是另一個 package name 。這樣，透過繼承，子 package 就可以繼承父 package 在設定的攔截器、action 等。 
+    
+    name：是一個必需的屬性，指定的 package 的名字，是被其他 package 繼承的key。
+    extends：是一個可選的屬性，指定要繼承的package ，透過繼承就可以繼承在其他 package 中定義的 action、攔截器等。
+    namespace：是一個可選的屬性，定義該 package 的命名空間。
+    abstract：是一個可選擇的屬性，指定該 package 是否是一個抽象 package ，如果是一個抽象 package，那麼就不能在此 package 中定義 action。
+ 
+ 
+    ※ 命名空間：
+    namespace： 在struts.x喔ml檔案中設定了Action，並有關心命名空間的問題，這是因為需要設定的 Action 很少，沒有必要關心 Action 的重名問題。
+                但是，如果是在一個大系統中，需要設定的 Action 就有很大的機率出現重名問題。為了解決這個問題，命名空間的概念就被提出來了。
+                Struts2.x 並不支援為單獨的 Action 設定命名空間，而是透過為 Action 所在的 package 指定 namespace 屬性來為該 package 下的所有
+                Action 指定共同的命名空間。  
+  -->
+  <package name="struts2_login" extends="struts-default" namespace="/login" >
+  
+    <action name="checkLogin" class="com.action.LoginAction" method="checkLogin" >
+      <result name="login"   >/form/login.jsp</result>      
+      <result name="success" >/form/loginSuccess.jsp</result>  
+    </action>
+
+  </package>
+
+
+          
+</struts>    
+

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+  <!-- 
+    設定 messageSource Bean. 該 Bean 的名字必須是 messageSource，採用 Spring 的實現類別 ResourceBundleMessageSource。
+    
+    ApplicationContext 介面繼承 MessageSource 介面，因此具備國際化功能。
+  -->
+  
+  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" >
+    <!-- basenames 用於確定資源檔的檔案名，該屬性接收 list 值，以接收多個資源檔 -->
+    <property name="basenames" >
+      <list>
+        <value>db</value>  <!-- 確定一份資源，資源檔名為 db -->
+      </list>
+    </property>
+  </bean>
+
+
+</beans>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+
+
+  
+  <!-- 
+     Introduction 
+     
+     引入與其他型態的通知有所不同，因為其他型態的通知是在方法呼叫的周圍織入到不同的連接點的，而引入則會影響整個類別，\
+     可以透過給需要訊息的類別增加方法和屬性來實現。
+     也就是說，可以用一個已存在的類別讓它實現另外的介面，維持另外的狀態(這也稱為混合)。
+     換句話說，使用引入能夠動態地建立複合物件，提供了多形繼承的好處。
+  -->
+
+  <!-- 
+      需要建立一個 Advisor，因為引入通知只應用在類別階層上，所以可以使用 IntroductionAdvisor。
+      對於這個介面 Spring 提供了一個適合大多數情況下的預設實現： DefaultIntroductionAdvisor，它有3個建構方法。
+      ★ DefaultIntroductionAdvisor(Advice advice)：透過一個通知建立一個引入剖面，引入剖面將為目標新增通知物件中所有介面的實現。  
+      ★ DefaultIntroductionAdvisor(DynamicIntroductionAdvice advice，Class clazz)：透過一個通知和一個指定的介面類別建立引入剖面，僅為目標物件新增 clazz 介面的實現。
+      ★ DefaultIntroductionAdvisor(Advice advice,IntroductionInfo introductionInfo)：透過一個通知和一個 IntroductionInfo 建立一個引入剖面，目標物件需要實現哪些介面，
+                                                                                      由introductionInfo 物件的 getInterfaces() 表示。
+   -->
+  <bean id="introduction_DefaultIntroductionAdvisor" class="org.springframework.aop.support.DefaultIntroductionAdvisor" >
+    <constructor-arg value="aop.introduction.interceptor.IExecuteTime" />
+ 
+    <!-- 引入通知 -->
+    <constructor-arg>
+      <bean class="aop.introduction.interceptor.impl.ExecuteTimeExtends" />
+    </constructor-arg>
+  </bean> 
+   
+
+  <!-- 使用 Spring 代理工廠設定一個代理  -->
+  <!-- 
+    ProxyFactoryBean 是 FactoryBean 介面的實現類別，負責為其他 Bean 建立代理實例，在內部使用 ProxyFactory 來完成這一工作。
+    下面來詳細說明 ProxyFactoryBean 的常用設定屬性：
+   
+    ＊ proxyInterfaces：代理所有實現的介面，可以是多個介面。該屬性還有一個別名屬性 interfaces。
+    
+    ＊ interceptorNames：需要織入目標物件的前置通知類別陣列(必須採用全限定類別名)，在內部 interceptorNames 是一個字串陣列， 
+                         ProxyFactoryBean 透過反射機制獲得對應的類別，它們可以是攔截器、通知或者包含通知和切點的 Advisor，設定中的順序對應呼叫的順序。
+    
+    ＊ target：代理目標物件。
+    
+    ＊ singleton：傳回的代理是否是單例，預設為單實例。 
+    
+    ＊ optimize：當設定為 true 時，強制使用 CGLIB 代理。對於 singleton 的代理，推薦使用 CGLIB ，對於其他作用攔位元型別的代理，最好使用 JDK 代理 。
+                 原因是 CGLIB 建立代理速度慢，而產出的代理物件執行效率高，而使用 JDK 代理的表現正好相反。
+              
+    ＊ proxyTargetClass：是否對類別進行代理，而不是對介面進行代理，設定為 true時，使用 CGLIB 代理。
+    
+    ＊ aopProxyFactory：使用的 ProxyFactoryBean 實現。Spring 帶有兩種實現(JDK 動態代理 和 CGLIB)。通常不需要使用這個屬性。
+    
+    ＊ exposeProxy：目標物件是否需要得到目前的代理。透過呼叫 AopContext.getCurrentProxy 實現。這樣做會在程式碼中引入 Spring 專有的 AOP 程式碼，
+                    所以，儘量避免使用。
+  
+    ＊ frozen：一旦工廠被建立，是否可以修改代理的通知。當設定為 true 時，在執行時就不能修改 ProxyFactoryBean 了。通常不需要使用這個屬性。                    
+
+
+
+    ※ 在 Spring AOP 中，為目標 Bean 織入橫切邏輯時，使用的動態代理技術有 JDK 動態代理和 CGLIB 動態代理。
+              
+              
+               
+     § AOP 的代理模式
+     
+     代理模式是 Spring 中常用的設計模式。Spring 提供了幾個常用的代理類別，例如普通的代理類別、交易代理類別等。
+    
+     ProxyFactoryBean 代理工廠物件
+     設定 AopServiceImpl 時使用了 org.springframework.aop.framework.ProxyFactoryBean 類別。
+     這是 Spring 內建的代理類別，引入了一個中間層，能夠建立不同類型的物件。利用它可以實現任何形式的AOP。
+            
+     TransactionProxyFactoryBean  交易代理工廠物件  
+     另一個很有用的代理類別是 TransactionProxyFactoryBean，是 ProxyFactoryBean 的子類別，常用在資料庫程式設計上。
+     Spring 利用 TransactionProxyFactoryBean 對交易進行管理，在指定方法前利用 AOP 連接資料庫並開啟交易，
+     然後在指定方法傳回後利用 AOP 傳送交易並斷開資料庫。
+     
+     AOP 模組提供對方面導向程式設計的支援。Spring 提供三種攔截器：方法前攔截器、傳回後攔截器、例外拋出攔截器。
+     分別在方法執行前、執行後、例外拋出後執行。
+     攔截器能夠作用在指定的類別、指定的方法上、能夠使用 Spring 的資料來源等資料。          
+  -->  
+  <bean id="proxyFactoryBean_StaticMethodMatcherPointcut" class="org.springframework.aop.framework.ProxyFactoryBean" >
+  
+    <!-- 攔截器，指定切入點，如果是多個，可以使用 <list> 元素指定 -->
+    <property name="interceptorNames" >
+      <!-- 
+      <idref local="introduction_DefaultIntroductionAdvisor" />
+      -->
+      <list>
+        <value>introduction_DefaultIntroductionAdvisor</value>   <!-- 引入剖面  -->
+      </list> 
+    </property>
+    
+    <!-- 被攔截的物件，指定目標物件 -->
+    <property name="target" >
+      <bean class="aop.introduction.People" />    <!-- 採用匿名類別物件的方式  -->
+    </property> 
+    
+    <!-- 使用 CGLIB 代理 -->
+    <property name="proxyTargetClass" value="true" />
+  </bean> 
+  
+  
+    
+</beans>

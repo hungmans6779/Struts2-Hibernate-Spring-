@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <!-- 
+        Spring Framework 提供了建構 Web 應用程式的全功能的 MVC 模組。透過策略介面，Spring Framework 是高度可設定的，
+    而且包含多種檢視技術，例如 JavaServer Pages(JSP) 技術、Velocity、Tiles、iText 和 POI 。
+    Spring MVC Framework 並不知道使用的檢視，所以不會強制只使用 JSP 技術。
+    另外 Spring MVC 分離了控制器(Controller)、模型物件(Model)、分發器(Dispatcher)以及處理常式物件的角色，
+    這種分離讓它們更容易進行訂製。 
+  
+  
+  
+    § Spring MVC 概述
+    
+    Spring 的 Web Framework 圍繞 DispatcherServlet 設計。
+    DispatcherServlet 的作用將請求分發到不同的處理器。
+    Spring 的 Web Framework 包括的處理器(Handler)映射、檢視(View)解析、當地語系化(Local)解析、主題(Theme) 解析以及對檔案上傳的支援。  
+    
+    Spring 的 Web Framework 中預設的處理器是 Controller 介面。可以透過實現這個介面來自訂控制器(也可以稱之為處理器)，
+    但是更推薦繼承 Spring 提供的一系列的控制器，例如 AbstractController、AbstractCommandController 和 SimpleFormController 。
+    但是在繼承過程中，需要選擇正確的基礎類別，例如如果沒有表單，就不需要一個 FormController。
+    
+    從 Spring 2.5 開始，使用 Java5 或者以上版本的使用者可以採用基於註釋的 Controller 方式。在實現傳統的 Controller 及其子類別時這是一種更好的替換方案，
+    它提供了更為靈活的處理 multi-action 的功能。
+    
+    ※ 和 WebWorker 相比，Spring 將物件細分成更多不同的角色：控制器、可選的指令物件(Command Object) 或者表單物件(Form Object)，
+    以及傳遞到檢視的模型(Model)。模型不僅包含指令物件或表單物件，而且可以包含任何參考資料。
+    
+    ※ 相比之下，WebWork 的 Action 將所有的這些角色都合併到一個單獨的物件裡。雖然 WebWorker 的確允許在表單中使用現有的業務物件，
+    但是必須把它們定義成相應的 Action 類別的 Bean 屬性。更重要的是，在進行檢視層(View)運算和表單給予值時， WebWork 使用的是同一個處理請求的 Action 實例。
+    因此，參考資料也需要被定義成 Action 的 Bean 屬性。
+    
+    結論：Spring 將物件細分成更多不同的角色。而 WebWork 將這些角色合併到一個單獨的物件裡，這樣一個物件就承擔了太多的角色，因而有所爭議。  
+    
+    
+    
+        Spring 的檢視解析(ViewResolver) 相當靈活。一個控制器甚至可以直接向 response 輸出一個檢視(此時控制器傳回 ModelAndView 的值必須是 null)。
+    在一般情況下，一個 ModelAndView 實例包含一個檢視名字和一個型態為 Map 的 Model，
+    一個 Model 是一些以 Bean 的名字為 Key，以 Bean 物件(可以是指令或者表單，也可以是其他的 JavaBean) 為 value 的鍵值對。
+    對檢視名稱的解析處理也是高度可設定的，可以透過 Bean 的名字、屬性檔案或者自訂的 ViewResolver 實現來進行解析。
+    實際上基於 Map 的 Model (也就是 MVC 中的 M)是高度抽象的，適用於各種表現層技術。也就是說，任何表現層都可以直接和 Spring 整合，
+    無論是 JSP 、 Velocity 還是其他表現層技術。 Map Model 可以被轉換成合適的格式，例如 JSP request attribute 或者 Velocity template model 。
+    
+    
+    
+    
+    ※ Spring MVC 特點
+    
+    (1) 清晰的角色劃分。控制器(Controller)、驗證器(Validator)、指令物件(Command Object)、表單物件(Form Object)、模型物件(Model Object)、
+                        Servlet 分發器(DispatcherServlet)、處理器映射(Handler Mapping)、檢視解析器(View Resolver)等。每一個角色都可以由一個專門的物件來實現。
+  
+    (2) 強大而直接的設定方式。Framework 類別和應用程式類別都能作為 JavaBean 設定，支援跨多個 context 的參考，
+                              例如，在 Web 控制器中對業務物件和驗證器(validator) 的參考。
+                              
+    (3) 可調配、非侵入。可以根據不同的應用場景，選擇合適的控制器子類別(simple 型、command 型、form 型、wizard 型、multi-action 型或者自訂)，
+                        而不是從單一控制器(例如 Action/ActionForm)繼承。
+                        
+    (4) 可重用的業務程式碼。可以使用現有的業務物件作為指令或表單物件，而不需要去擴充某個特定 Framework 的基礎類別。
+    
+    (5) 可訂製的綁定(binding) 和驗證(validation)。例如，將型態不比對作為應用級的驗證錯誤，這可以儲存錯誤的值。
+                                                  例如，當地語系化的日期和數位綁定等。在其他某些 Framework 中，只能使用字串表單物件，
+                                                  需要手動解析它並轉換為業務物件。   
+                                                  
+    (6) 可訂製的 handler mapping 和 view resolution。 Spring 提供從最簡單的 URL 映射到複雜的、專用的訂製策略。
+                                                      與某些 Web MVC Framework 強制開發人員使用單一的特定技術相比，Spring 顯得更加靈活。                 
+    
+    (7) 靈活的 model 轉換。在 Spring Web Framework 中，使用基於 Map 的鍵 / 值對來實現與各種檢視技術的整合。
+    
+    (8) 可訂製的當地語系化和主題(Theme)解析。支援在 JSP 中可選擇地使用 Spring 標籤庫、支援 JSTL 、支援 Velocity(不需要額外的中間層)等。
+    
+    (9) 簡單而強大的 JSP 標籤庫 (Spring Tag Library)。支援包括諸如資料綁和主題(theme) 之類別的許多功能，提供在標記方面的最大靈活性。
+    
+    (10) JSP 表單標籤庫。在 Spring 中引入的表單標籤庫使得在 JSP 中撰寫表單更加容易。1
+    
+    (11) Spring Bean 的生命週期可以被限制為目的的 HTTP Request 或者 HTTP Session 。準確地說，這並非 Spring MVC Framework 本身的特性，
+         而應歸屬於 Spring MVC 使用的 WebApplicationContext 容器。
+
+  -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- 
+    開發一個 Spring MVC 程式至少需要經過下列步驟：
+    
+    (1) 撰寫處理請求邏輯的處理器。
+    (2) 在 DispatcherServlet 上下文對應的 Spring 設定檔中設定處理器(Controller)。
+    (3) 設定一個檢視解析器(ViewResolver)，對處理器傳回的 ModelAndView 進行解析。
+    (4) 撰寫一個檢視物件(一般是 JSP)，將響應展現給客戶。
+  -->
+
+
+
+
+
+
+
+  <!-- 
+    處理器映射與攔截器
+    
+    透過處理器映射，DispatcherServlet 可以找到處理 HTTP 請求對應的處理器(handler)。
+    處理器映射根據請求傳回一個對應的處理器鏈(HandlerExecutionChain)，它包括兩個類別物件：
+    一個是處理器(Handler)；其二是處理器攔截器(HandlerInterceptor) 。
+ 
+    
+    Spring MVC 所提供的 HandlerMapping 實現類別都繼承了 AbstractUrlHandlerMapping，該抽象類別定義了所有實現類別共有的特性。
+    
+    ★ interceptors：攔截器列表，任何由該 HandlerMapping 負責請求映射所傳回的 HandlerExecutionChain 都包括了這些攔截器列表。
+
+    ★ defaultHandler：預設的處理器。當不存在比對請求的處理器時使用該預設處理器。
+
+    ★ order：如果 Spring 容器中有多個可用的 HandlerMapping 時，DispatcherServlet 將按順序諮詢 HandlerMapping，直接獲得可用的 HandlerExecutionChain。
+              order 越低表優先序越高，未設定 order 的優先順序先最低。
+
+    ★ alwaysUserFullPath：如果這個屬性被設定為 true ， Spring 將會使用絕對路徑在目前的 DispatcherServlet 上下文尋找合適的處理器。
+                           這個屬性的預設值是 false ，則使用相對的路徑。例如：如果一個 DispatcherServlet 在 <servlet-mapping> 中用的設定值是 /mvc/*。
+                           當將 alwaysUserFullPath 設定為 true 時，處理器映射中的 URL 格式應該使用 /mvc/index.html;當將這個屬性設定為 false 時，
+                           URL 格式應該寫成 /index.html。 
+    
+    ★ urlPathHelper： 指定在分析 URL 時使用的 UrlPathHelper，通常使用其預設值。
+    
+    ★ urlDecode：這個屬性的預設值為 false 。HttpServletRequest 傳回未解碼的 URL 和 URI。HttpServletRequest 中請求的 URL 和 URI 還保留在 HTTP 協定所定義的編碼狀態。
+                  如果使用者需要在 HandlerMapping 使用它們尋找處理器之前對 URI 進行解碼，應該把這個屬性設定成 true。
+                  解碼方法會選用 HTTP 請求中指定的編碼格式或預設的 ISO-8859-1 編碼方式。 
+  -->
+
+
+  <!-- 
+    使用 BeanNameUrlHandlerMapping
+    BeanNameUrlHandlerMapping 是 DispatcherServlet 的預設映射處理器。因此不需要在上下文設定檔中明確宣告它，但是可以選擇總是明確宣告它，
+    這樣就非常清楚使用的是哪個映射處理器。如果使用多映射處理器，則需要明確宣告，而且需要指定順序。
+    
+    
+    定義好攔截器後，需要在設定檔中進行設定。 下面將 MyHandlerInterceptor 裝配到 BeanNameUrlHandlerMapping 中，
+    這樣所有透過 BeanNameUrlHandlerMapping 解析處理器映射的請求都會被 MyHandlerInterceptor 實施攔截。 
+  -->
+  <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" >
+    <!-- 設定攔截器 (Interceptor)  -->
+    <property name="interceptors" >
+      <list>
+        <bean class="com.spring.mvc.interceptor.MyHandlerInterceptor" />
+      </list>
+    </property>
+  </bean>
+
+
+
+  <!-- 
+     使用 SimpleUrlHandlerMapping
+       
+     SimpleUrlHandlerMapping 透過一個 Properties 型態的 mappings 屬性定義 URL 到處理器的映射關係。
+     處理器可以採用標準的 Bean 名字而不需要使用奇怪的 URL 進行命名。
+  -->
+  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" >
+    
+    <!-- 設定攔截器 (Interceptor)  -->
+    <!-- 
+    <property name="interceptors" >
+      <list>
+        <bean class="com.spring.mvc.interceptor.MyHandlerInterceptor" />
+      </list>
+    </property>
+    --> 
+    <property name="mappings" >
+      <props>
+        <prop key="index1.mvc" >index1Controller</prop>
+        <prop key="userCommandController.mvc" >userCommandController</prop>
+        <prop key="reg.mvc" >regController</prop>
+        
+        <!-- 
+          使用 PropertiesMethodNameResolver ：根據一個鍵值清單解析方法名。 
+          org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver 
+        -->
+        <prop key="/addUser2.mvc"    >userMethodNameResolver_MultiActionController</prop>
+        <prop key="/deleteUser2.mvc" >userMethodNameResolver_MultiActionController</prop>
+        
+        <!-- 使用檔案名控制器(UrlFilenameViewController)的控制器 -->
+        <prop key="/fileNameHi1.mvc" >fileNameController</prop>
+        <prop key="/fileNameHi2.mvc" >fileNameController</prop>
+        
+      </props>
+    </property>
+  </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- 
+    所有 Web 應用的 MVC Framework 都有它們定位檢視的方式。Spring 提供了檢視解析器以便在瀏覽器中顯示模型資料，
+    而不必要被束縛在特定在的檢視技術上。Spring 內建了對 JSP、Veolicty 模版和 XSLT 檢視的支援。Spring 提供了多種檢視解析器。
+    
+    參閱：Visual Paradigm 內的類別圖：檢視解析器(ViewResolver)類別階層體系。
+    
+    
+    
+    ※ 選擇檢視解析器(ViewResolver)
+        
+        大多專案相依 JSP 來著色檢視結果，如果應用系統不需要國際化，或者不需要為不同地區的使用者顯示不同檢視，
+    此時推薦使用 InternalResourceViewResolver，因為它非常簡單並且設計得很簡潔，而不像其他檢視解析器需要明確地定義每個檢視。
+        
+        如果需要使用一些訂製的檢視實現，例如 PDF、Excel、圖片等，這時應該考慮使用其他型態的檢視解析器。
+    如 BeanNameViewResolver，它可以在 Spring 上下文 XML 定義檔案中定義檢視 Bean。
+        
+        如果檢視 Bean 數目過多，直接在 DispatcherServlet 上下文主設定檔中定義這些檢視 Bean 會導致設定檔臃腫，不易維護，
+    這時可以使用 XmlViewResolver ，它可以將檢視 Bean 定義在一個獨立的 XML 檔案中。
+    
+        如果希望為不同地區的使用者提供不同型態的檢視，例如需要根據使用者的地理位置著色完全不同的檢視，這時應該使用 ResourceBundleViewResolver，
+    它透過國際化資源檔定義檢視物件。
+    
+  -->
+  
+  
+  <!-- 
+    設定檢視解析器(ViewResolver) 
+    
+    InternalResourceViewResolver 預設使用 InternalResourceView 檢視類別，
+  -->
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+    <!-- 使用 JstlView 作為檢視類別  -->
+    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />  
+    <property name="prefix"    value="/WEB-INF/jsp/" />  <!-- 字首(表示以 Web 根目錄開始) -->
+    <property name="suffix"    value=".jsp"          />  <!-- 字尾 -->  
+  </bean>
+  
+  
+  <!-- 使用TilesView -->
+  <!-- 
+  <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver" >
+    <property name="viewClass" value="org.springframework.web.servlet.view.tiles.TilesView"    />  
+  </bean>
+  -->
+  
+
+
+
+
+
+
+
+
+
+  <!-- 
+    使用 Tiles 版面版置
+    
+    Jakarta Tiles 是一個用於在模版中對頁面區塊進行版面配置 Framework 。儘管它最初是作為 Jakarta Struts 的一部份建立的，
+    但是 Tiles 即可以用在 Struts 中，也可以在 Struts 之外獨立使用。這裡將與 Spring 的 MVC Framework 一起使用 Tiles。
+    
+    將 Tiles 和 Spring MVC 整合的第一步是通知 Spring 載入 Tiles 設定檔。 
+    Spring 提供了 TilesConfigurer，一個載入 Tiles 設定檔並使之在著色 Tiles 檢視時可用的 Bean 。
+    要載入 Tiles 設定到 Spring。
+    
+    透過 TilesConfigurer Bean 設定 Tiles 環境，definitions 屬性用於指定所有的 Tiles 定義檔案，
+    在預設情況下，TilesConfigurer 對 Tiles 定義檔案進行有效性檢驗，但是可以將 validateDefinitions 屬性設定為 false 來改變預設設定。
+    
+    
+    在專案中加入 Spring 開發所需要的類別包，Tiles 類別庫包： tiles-api-2.0.6.jar、 tiles-core-2.0.6.jar 和 tiles-jsp-2.0.6.jar;
+    如果使用了 JSTL 標籤，還要加入 JSTL 包：jstl-api-1.2.jar; 
+    另外還有 commons-beanons-beanutils-1.7.0.jar 和 commons-digester-1.8.jar 。   
+  -->
+  <bean class="org.springframework.web.servlet.view.tiles.TilesConfigurer" >
+   <property name="definitions" >
+      <list>
+        <value>/WEB-INF/Spring_MVC-defs.xml</value>     <!-- 指定 Tiles 定義檔案 -->
+      </list>
+    </property>
+  </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- 
+    設定國際化資訊
+    
+    假設正在開發一個支援多國語言的 Web 應用程式，要求系統能夠根據用戶端系統的語言型態傳回對應的介面：
+    英文的作業系統傳回英文介面，而中文的作業系統則傳回中文介面。這便是典型的 i18n 國際化問題。 
+   
+    在 Spring 中， ApplicationContext 繼承了 org.springframework.context.MessageResource 介面，使用 getMessage() 的各個方法來取得資訊資源。
+    
+    id 名字是固定的，不能更改，這是Spring 預設設定的。屬性 basenames 指定了資源檔的名稱。
+    這只是告訴 Spring 使用國際化資源資訊，但是還需要在頁面中進行國際化資訊輸出。
+  -->
+  <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" >
+    <property name="basenames" >
+      <list>
+        <value>message</value>
+      </list>
+    </property>
+  </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- 
+    設定例外解析器
+    
+    
+         Spring MVC 比標準的 web.xml 檔案允許更準確的例外處理，這是透過其 HandlerExceptionResolver 介面來實現的，雖然很可能只把例外映射出錯頁面，
+    不過有了 HandlerExceptionResolver，就可以針對實際的請求處理器和所拋出的例外進行映射。可以將這些解析器串連起來以建立實際的例外處理映射。
+    
+        若處理請求時出現例外， Spring MVC 將捕捉該例外，將其發送至一個特定的錯誤頁面或其他例外處理程式碼。
+    HandlerExceptionResolver 將處理拋出 HandlerInterceptors、Controller 或 View 呈現在任何例外。
+    在一般情況下，例外被映射到一個特定的錯誤頁面，但若要滿足特殊錯誤處理需要而擴充該功能也很容易。
+  -->
+  <bean id="handlerExceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" >
+    <!-- 
+       exceptionMappings 屬性是一個 java.util.Properties，映射了例外類別名和邏輯檢視名，
+       在本例中，基礎例外類別被映射到邏輯名為 javaLangException 的檢視上，這樣如果有任何例外拋出，使用者不會在瀏覽器中看例外追蹤資訊。
+       
+       當一個處理器拋出一個例外時，SimpleMappingExceptionResolver 將它解析為 javaLangException ，最後使用設定的檢視解析器將其解析為一個檢視。
+       如果使用程式碼 InternalResourceViewResolver 檢視解析器，那麼使用者將被導向 /WEB-INF/jsp/javaLangException.jsp 。
+    -->
+    <property name="exceptionMappings" >
+      <props>
+        <prop key="java.lang.Exception" >javaLangException</prop>
+      </props>
+    </property>
+  </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- 
+    檔案上傳
+  
+    Spring MVC 透過 MultipartResolver 為檔案上傳提供了支援、MultipartResolver 支援 Jakarta Commons FileUpload 檔案上傳元件。
+    
+    如果想使用 Spring 的檔案上傳功能，首先需要在 DispatcherServlet 上下文中增加分段檔案上傳解析器，
+    否則，應用上下文中已經定義了  MultipartResolver 就會被呼叫來處理這種請求。 
+  
+    CommonsMultipartResolver 採用 Jakarta Commons FileUpload 處理上傳，
+    使用該解析器時，必須將 commons-fileupload.jar 和 commons-io.jar 增加到類別路徑中。
+    另外， MultipartResolver 是被 DispatcherServlet 自動識別，無須再進行額外的設定，但是 Bean 名稱必須為 multipartResolver。
+   -->
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" > 
+    <!-- defaultEncoding 必須與 JSP 頁面的 pageEncoding 屬性一致，以便正確讀取表單內容  -->
+    <property name="defaultEncoding" value="UTF-8"           />  <!-- 請求編碼格式為 UTF-8 -->
+    
+    <property name="maxUploadSize"   value="50000"           />  <!-- 最大上傳檔案 50KB -->
+    
+    <!-- uploadTempDir 是檔案上傳過程所使用的臨時目錄，檔案上傳完成後，臨時目錄中的過程性檔案會自動被清除  -->
+    <property name="uploadTempDir"   value="upload/tempfile" />  <!-- 上傳檔案的臨時路徑 -->
+  </bean>
+
+
+
+
+
+
+
+
+
+
+</beans>
+
+
+

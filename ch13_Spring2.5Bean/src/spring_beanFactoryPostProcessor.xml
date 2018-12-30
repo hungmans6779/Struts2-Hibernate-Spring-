@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <!-- 
+     ※ 後處理 Bean 工廠  BeanFactoryPostProcessor
+     
+         Spring 提供了一種 Bean，這種 Bean 並不對外提供服務，無需 id 屬性，但它負責對容器中的其他 Bean 執行處理，
+     例如為容器中的目標 Bean 產生代理。這種 Bean 可稱為 Bean 後處理器，在 Bean 實例建立成功後，對其進行進一步的加強處理。
+     後處理器 Bean 主要透過 Bean 後處理器的實現。
+         後處理器在 Bean 產生實體以及裝配完成之後發生。在 Bean 被建立以及裝配之後，BeanPostPorcessor 介面提供兩次修改 Bean 的機會，
+     也就透過該介面的兩個方法來完成，因此 Bean 後處理器必須實現　BeanPostProcessor 介面及其兩個方法，該介面包含以下兩個方法。
+     
+     Object postProcessBeforeInitialization(Object bean, String beanName)
+      
+     Object postProcessAfterInitialization(Object bean, String beanName)
+     
+    生命週期：參閱　活動圖：BeanFactory 中 Bean 的生命週期 
+  -->	
+  
+ 	
+  <!-- 設定 Bean 後處理器，沒有id 屬性  -->
+  <bean class="com.spring.bean.beanFactoryPostProcessor.MyBeanFactoryPostProcessor" />
+  
+  <bean id="man" class="com.spring.bean.beanFactoryPostProcessor.Man"  />  
+  <bean id="life" class="com.spring.bean.beanFactoryPostProcessor.Life" init-method="init" >
+    <property name="man" ref="man" />
+  </bean>
+  
+  
+</beans>

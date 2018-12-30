@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	
+ <!-- 
+   自動裝配型態：
+   
+   (1) byName： 根據屬性名自動裝配。此選項將檢查容器並根據名稱尋找與屬性完全一致的Bean，並將其與屬性自動裝配。
+                例如，在Bean 定義中 autowire 設定為 byName ，而該 Bean 包含 master屬性(同時提供 setMaster() 方法)，
+                Spring 就會尋找名為 master 的 Bean 定義，並將它裝配給 master 屬性。 
+                
+   (2) byType： 如果容器中存在一個與指定屬性型態相同的 Bean，那麼將與該屬性自動裝配。如果存在多個該型態的 Bean，那麼將會拋出例外，
+                並指出不能使用 byType 方式進行自動裝配。若沒有找到相比對的Bean ，則什麼事都不發生，屬性也不會被設定。
+                如果不希望這樣，那麼可以透過設定 dependency-check="object" 使 Spring 拋出例則。
+   
+   (3) constructor：與 byType 的方式類似，不同之處在於它應用於建構元參數。如果在容器中沒有找到與建構元參數型態一致的，那麼會拋出例則。
+   
+   (4) autodetect：透過Bean 類別的自省機制決定使用 constructor 還是 byType 方式進行自動裝配。如果發現預設的建構元，那麼將使用 byType 方式。
+   
+   
+   
+ -->
+
+
+  <bean id="man" class="com.spring.bean.autowire.Man"  >
+    <property name="name" value="kevin" />
+    <property name="age"  value="35"    />
+    <property name="sex"  value="男"    />
+   </bean>
+
+
+  <!-- 
+    ※ autowire-candidate="false" 
+    在一個 Spring 應用中，Bean 的數量很多，因此在使用自動裝配時，如果容器中有多個比對項，Spring 將拋出例外，不能正常工作。
+    針對這個問題，可以對那些不需要比對的 Bean 進行設定，設定這個 Bean 是否為被自動裝配物件。
+    當採用 XML 格式設定 Bean 時，可以將 <bean> 元素的 autowire-candidate 屬性設定為 false ，這樣容器在尋找自動裝配物件時，
+    將不考慮該 Bean ，也就這個 Bean 將不會將被作為自動裝配物件。
+   -->
+  <bean id="man01" class="com.spring.bean.autowire.Man01"  autowire-candidate="false" >
+    <property name="name" value="kevin" />
+    <property name="age"  value="35"    />
+    <property name="sex"  value="男"    />
+   </bean>
+   
+   
+  <!-- autowire="byName" 測試 -->
+  <bean id="build01" class="com.spring.bean.autowire.Building01" autowire="byName" >
+    <property name="name" value="自由人01" />
+    <property name="age"  value="01"    />
+   </bean>
+ 
+  <!-- autowire="constructor" 測試 -->
+  <bean id="build02" class="com.spring.bean.autowire.Building02" autowire="constructor" >
+    <property name="name" value="自由人02" />
+    <property name="age"  value="02"    />
+  </bean>
+     
+     
+  <!--  autowire="byType" -->
+  <!-- 
+     autowire="byType" ，程式依可以正確執行。實際執行過程不再說明，這裡簡單講述一下 Spring 如何進行按比對導入參數。
+     如果有 A 類別和 B 類別，兩者滿足以下3種情況中的任何一種，可以稱之為 A 按型態比對於 B。
+     ◆ A 和 B 是相同的型態。
+     ◆ A 是 B 的子類別。 
+     ◆ A 實現了 B 的介面。
+     下面幾個例子來說明
+     ◆ 所有類別都按型態比對於 Object，因 Object 類別是 Java 中所有類別的超類別。 
+     ◆ 所有的例外按型態比對於 Exception ，因為 Exception 類別是所有例外類別的超類別。 
+     ◆ 又如所有 List 實現類別都按型態比對於 List 介面。
+      
+  -->
+  <bean id="build03" class="com.spring.bean.autowire.Building03" autowire="byType" >
+    <property name="name" value="自由人03" />
+    <property name="age"  value="03"    />
+  </bean>
+     
+     
+     
+   
+</beans>

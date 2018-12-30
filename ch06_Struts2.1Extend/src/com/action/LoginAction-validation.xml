@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+ 
+  <!-- 欄位驗證器方式 -->
+  
+  
+  <!-- 用戶名稱欄位驗證 -->
+  <field name="userName" >                                 <!-- 指定屬性為 name  -->
+    <field-validator type="requiredstring" >               <!-- 定義驗證型態 requiredstring  -->
+      <message key="login.userName.requiredFault" />       <!-- 驗證失敗時輸出資訊 -->
+    </field-validator>
+  </field>
+  
+  <!-- 用戶密碼欄位驗證 -->
+  <field name="pass" >                                     <!-- 指定屬性為 pass  -->
+    <field-validator type="requiredstring" >               <!-- 定義驗證型態 requiredstring  -->
+      <message key="login.userPassword.requiredFault" />   <!-- 驗證失敗時輸出資訊 -->
+    </field-validator>
+  </field>
+  
+  
+</validators>

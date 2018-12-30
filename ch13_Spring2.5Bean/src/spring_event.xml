@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+ <!-- 
+    事件處理
+    
+    眾所皆知，Java 透過 java.util.EventObject 類別和 java.util.EventListener 介面描述事件和監聽器，某個元件或 Framework 要建立自已的事件發佈和監聽機制，
+    某個元件或 Farmework 要建立自己的事件發佈和監聽機制，一般都透過擴充它們定義自己的事件和事件監聽器。Spring 的 ApplicationContext 能夠發佈事件並且
+    允許註冊相應的事件監聽器，它擁有一套完善的事件發佈和監聽機制。Spring 事件處理也是透過擴充其定義的事件和事件監聽器。
+    
+    ApplicationEvent 容器事件，必須由 ApplicationContext 發佈。
+    ApplicationEventListener 監聽器，可由容器中的任何監聽的 Bean 擔任。
+ 
+ 
+    1.事件類別
+    目前 SpringFramework 本身定義了3個事件，ApplicationEvent 唯一的建構方法是 ApplicationEvent(Object source)，透過 source 指定事件源，
+    它的3個子類別如下。
+    ● ContextRefreshedEvent：當容器初始化或更新時產生該事件，更準確一點，就是呼叫容器的 refresh() 方法時產生該事件。
+    ● ContextClosedEvent：當容器關閉前產生該事件，即呼叫容器的close() 方法時產生該事件。
+    ● RequestHandleEvent：這是一個 Web 應用相關的事件，當一個 HTTP 請求被處理後產生該事件。只有在 web.xml 中定義了 DispatcherServlet 時才會產生該事件。
+       當然也可以根據需要擴充  ApplicationEvent 定義自己的事件，完成其他特殊的功能。 
+    
+    
+    2. 事件監聽器介面
+       Spring 只有一個事件監聽器介面 ApplicationListener。
+       ApplicationListener 介面只定義了一個方法： onApplicationEvent(ApplicationEvent event)，該存取接受 ApplicationEvent 事件物件，
+       方法實現者在該方法中撰寫事件的回應處理邏輯。
+       
+     
+    3. 實現事件處理
+       透過 ApplicationEvent 類別和 ApplicationListener 介面可實現 ApplicationContext 的事件處理。如果容器中有一個 ApplicationListener Bean，
+       每當 ApplicationContext 發佈 ApplicationEvent 時， ApplicationListener Bean 將自動回應，這是標準的觀察者模式。 
+    
+    
+ -->
+	
+  <bean id="emailListener" class="com.spring.bean.event.EmailNotifier" />
+	
+	
+</beans>

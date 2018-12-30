@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <!-- 
+        Spring Framework 提供了建構 Web 應用程式的全功能的 MVC 模組。透過策略介面，Spring Framework 是高度可設定的，
+    而且包含多種檢視技術，例如 JavaServer Pages(JSP) 技術、Velocity、Tiles、iText 和 POI 。
+    Spring MVC Framework 並不知道使用的檢視，所以不會強制只使用 JSP 技術。
+    另外 Spring MVC 分離了控制器(Controller)、模型物件(Model)、分發器(Dispatcher)以及處理常式物件的角色，
+    這種分離讓它們更容易進行訂製。 
+  
+  
+  
+    § Spring MVC 概述
+    
+    Spring 的 Web Framework 圍繞 DispatcherServlet 設計。
+    DispatcherServlet 的作用將請求分發到不同的處理器。
+    Spring 的 Web Framework 包括的處理器(Handler)映射、檢視(View)解析、當地語系化(Local)解析、主題(Theme) 解析以及對檔案上傳的支援。  
+    
+    Spring 的 Web Framework 中預設的處理器是 Controller 介面。可以透過實現這個介面來自訂控制器(也可以稱之為處理器)，
+    但是更推薦繼承 Spring 提供的一系列的控制器，例如 AbstractController、AbstractCommandController 和 SimpleFormController 。
+    但是在繼承過程中，需要選擇正確的基礎類別，例如如果沒有表單，就不需要一個 FormController。
+    
+    從 Spring 2.5 開始，使用 Java5 或者以上版本的使用者可以採用基於註釋的 Controller 方式。在實現傳統的 Controller 及其子類別時這是一種更好的替換方案，
+    它提供了更為靈活的處理 multi-action 的功能。
+    
+    ※ 和 WebWorker 相比，Spring 將物件細分成更多不同的角色：控制器、可選的指令物件(Command Object) 或者表單物件(Form Object)，
+    以及傳遞到檢視的模型(Model)。模型不僅包含指令物件或表單物件，而且可以包含任何參考資料。
+    
+    ※ 相比之下，WebWork 的 Action 將所有的這些角色都合併到一個單獨的物件裡。雖然 WebWorker 的確允許在表單中使用現有的業務物件，
+    但是必須把它們定義成相應的 Action 類別的 Bean 屬性。更重要的是，在進行檢視層(View)運算和表單給予值時， WebWork 使用的是同一個處理請求的 Action 實例。
+    因此，參考資料也需要被定義成 Action 的 Bean 屬性。
+    
+    結論：Spring 將物件細分成更多不同的角色。而 WebWork 將這些角色合併到一個單獨的物件裡，這樣一個物件就承擔了太多的角色，因而有所爭議。  
+    
+    
+    
+        Spring 的檢視解析(ViewResolver) 相當靈活。一個控制器甚至可以直接向 response 輸出一個檢視(此時控制器傳回 ModelAndView 的值必須是 null)。
+    在一般情況下，一個 ModelAndView 實例包含一個檢視名字和一個型態為 Map 的 Model，
+    一個 Model 是一些以 Bean 的名字為 Key，以 Bean 物件(可以是指令或者表單，也可以是其他的 JavaBean) 為 value 的鍵值對。
+    對檢視名稱的解析處理也是高度可設定的，可以透過 Bean 的名字、屬性檔案或者自訂的 ViewResolver 實現來進行解析。
+    實際上基於 Map 的 Model (也就是 MVC 中的 M)是高度抽象的，適用於各種表現層技術。也就是說，任何表現層都可以直接和 Spring 整合，
+    無論是 JSP 、 Velocity 還是其他表現層技術。 Map Model 可以被轉換成合適的格式，例如 JSP request attribute 或者 Velocity template model 。
+    
+    
+    
+    
+    ※ Spring MVC 特點
+    
+    (1) 清晰的角色劃分。控制器(Controller)、驗證器(Validator)、指令物件(Command Object)、表單物件(Form Object)、模型物件(Model Object)、
+                        Servlet 分發器(DispatcherServlet)、處理器映射(Handler Mapping)、檢視解析器(View Resolver)等。每一個角色都可以由一個專門的物件來實現。
+  
+    (2) 強大而直接的設定方式。Framework 類別和應用程式類別都能作為 JavaBean 設定，支援跨多個 context 的參考，
+                              例如，在 Web 控制器中對業務物件和驗證器(validator) 的參考。
+                              
+    (3) 可調配、非侵入。可以根據不同的應用場景，選擇合適的控制器子類別(simple 型、command 型、form 型、wizard 型、multi-action 型或者自訂)，
+                        而不是從單一控制器(例如 Action/ActionForm)繼承。
+                        
+    (4) 可重用的業務程式碼。可以使用現有的業務物件作為指令或表單物件，而不需要去擴充某個特定 Framework 的基礎類別。
+    
+    (5) 可訂製的綁定(binding) 和驗證(validation)。例如，將型態不比對作為應用級的驗證錯誤，這可以儲存錯誤的值。
+                                                  例如，當地語系化的日期和數位綁定等。在其他某些 Framework 中，只能使用字串表單物件，
+                                                  需要手動解析它並轉換為業務物件。   
+                                                  
+    (6) 可訂製的 handler mapping 和 view resolution。 Spring 提供從最簡單的 URL 映射到複雜的、專用的訂製策略。
+                                                      與某些 Web MVC Framework 強制開發人員使用單一的特定技術相比，Spring 顯得更加靈活。                 
+    
+    (7) 靈活的 model 轉換。在 Spring Web Framework 中，使用基於 Map 的鍵 / 值對來實現與各種檢視技術的整合。
+    
+    (8) 可訂製的當地語系化和主題(Theme)解析。支援在 JSP 中可選擇地使用 Spring 標籤庫、支援 JSTL 、支援 Velocity(不需要額外的中間層)等。
+    
+    (9) 簡單而強大的 JSP 標籤庫 (Spring Tag Library)。支援包括諸如資料綁和主題(theme) 之類別的許多功能，提供在標記方面的最大靈活性。
+    
+    (10) JSP 表單標籤庫。在 Spring 中引入的表單標籤庫使得在 JSP 中撰寫表單更加容易。1
+    
+    (11) Spring Bean 的生命週期可以被限制為目的的 HTTP Request 或者 HTTP Session 。準確地說，這並非 Spring MVC Framework 本身的特性，
+         而應歸屬於 Spring MVC 使用的 WebApplicationContext 容器。
+
+  -->
+
+
+
+
+</beans>

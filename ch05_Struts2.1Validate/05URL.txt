@@ -1,0 +1,134 @@
+   第 五 章  Struts2.x 輸入驗證
+
+       由於 Web 應用的開放性，所有用戶端使用者都可以自由使用，所以使用者輸入資料可能比較繁雜，資料驗證也就成為所有 Web 應用面對的問題。
+   只有進行嚴格的資料登錄驗證，才能提昇系統的穩固性，保證其正常執行。Struts2.x Framework 提供了非常強大的輸入驗證體系，
+   透過 Struts2.x 內建的輸入驗證器，開發者無須撰寫任何輸入驗證程式碼，即可實現絕大部份輸入驗證，並可以同時實現用戶端驗證和伺服器端驗證。
+   另外，Struts2.x 允許透過重新定義 validate() 方法和自訂驗證器，實現對資料更有效的控制。    
+       
+
+
+
+
+   Struts2.x 輸入驗證流程
+    透過上面的介紹和實例應用可以知道，Struts2.x 完成輸入驗證需要經過以下幾個步驟：
+    (1)　進行用戶端的驗證。
+    (2)　對請求的字串參數進行型態轉換，並設定為對應的 Action 屬性。
+    (3)　如果型態轉換出現例外，則將例外資訊封裝到 fieldError 中，這裡不管是不是產生轉換例外，都要進入下一步。
+    (4)　呼叫 Action 的 validateXxx() 驗證方法，其中 xxx() 是請求 Action 中對應的處理邏輯方法的名稱。
+    (5)　呼叫 Action 的 validate() 驗證方法。
+    (6)　完成上面的步驟，Framework 開始檢查在以上過程是否產生 fieldError，如果是，則傳回 input 邏輯檢視，反之，則傳回其他相應的邏輯檢視。
+    (7)　系統根據上一步驟傳回的邏輯檢視名呈現相應的實體檢視。
+    
+   
+   
+   
+
+    
+  《validate》：在 Struts2.x Framework 中，專門用來驗證資料的方法是 validate() 。開發者透過繼承 ActionSuport 類別，
+                並重新定義 validate() 方法來完成輸入驗證。
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/ch05ValidateNS/validate.action
+      
+  
+   
+   
+  《重新定義 validateXxx() 方法》：在 Struts2.x Framework 中，允許提供一個 validateXxx() 方法，專門驗證 xxx() 這個處理邏輯。
+                                   例如：有一個處理邏輯為 regist() 的方法，在 Action 中，就可以使用 validateRegist() 方法來驗證這個處理邏輯。 
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/ch05ValidateNS/validate1.action
+   
+  
+  
+   
+  《重新定義 validateXxx() 方法及存在 validate() 方法時》：在 Struts2.x Framework 中，允許提供一個 validateXxx() 方法，專門驗證 xxx() 這個處理邏輯。
+                                                           例如：有一個處理邏輯為 regist() 的方法，在 Action 中，就可以使用 validateRegist() 方法來驗證這個處理邏輯。
+                                                           如果被請求的 Action 處理邏輯還有對應的 validateXxx() 驗證方法，那麼該驗證方法將在 validate() 驗證方法之前被執行。 
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/ch05ValidateNS/validate2.action
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+     
+  《欄位驗證器》設定風格
+  <validators> 
+    <field name="被驗證的欄位" >
+      <field-validator type="驗證器型態名" >
+        <param name="參數名" >參數值</param>
+        <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+      </field-validator>
+    </field>
+  </validators>
+
+
+
+
+  《非欄位驗證器》設定風格
+  <validators> 
+    <validator type="驗證器型態名" >
+       <param name="fieldName" >需要被驗證的欄位</param>
+       <!-- 下面的 param 元素可以有 0 個或多個 -->
+       <param name="參數名" >參數值</param>
+     
+       <message key="I18Nkey" >驗證失敗時的提示資訊</message>
+    </validator>
+  </validators>
+
+
+   
+  《登入內建實例》： 使用內建驗證器：需要在一個檔案(也稱為驗證檔案) 中設定，這裡該設定檔的名稱為 RequiredstringAction-validation.xml。
+ 
+  「欄位驗證器」設定風格
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/ch05ValidateNS/requiredstring.action
+   
+  「非欄位驗證器」設定風格
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/ch05ValidateNS/requiredstring1.action
+   
+   
+   
+  
+  《必填驗證器》： 用於檢查指定的攔位必須有值(非null)，這是內建驗證器中比較簡單的一個。
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/ch05ValidateNS/required.action
+   
+   
+      
+   
+  《字串長度驗證器》：要求被驗證欄位必須滿足指定的長度範圍，否則驗證失敗 。
+  《整數驗證器》    ：要求被驗證的整數在指定整數範圍內，否則驗證失敗 。
+  《日期驗證器》    ：日期驗證器的名字為 date，此驗證器要求被驗證的日期欄位值必須在指定範圍內，否則驗證失敗。
+  《郵寄地址驗證器》：要求指定欄位必須滿足郵寄地址規則，這個規則基於正則運算式。
+  《規則運算式驗證器》：正則運算式驗證器的名字為 regex，使用正則運算式驗證一個字串欄位。
+   
+   
+   「欄位驗證器」設定風格
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/ch05ValidateNS/stringlength.action
+   
+  「非欄位驗證器」設定風格
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/ch05ValidateNS/stringlength1.action
+   
+   
+   
+   
+   有問題，暫不處理 
+  《客戶端驗證》   
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/form/validateFile/client.jsp
+
+   
+   
+   
+   
+  《自訂驗證器》:如果在 src(或者 classes )資料夾下建立了 validators.xml 檔案，並且在該檔案中設定自訂驗證器，那麼 Framework 提供的內建驗證器將不再起作用。
+                 因為系統首先在 classes 資料夾下尋找 validators.xml 檔案，如果沒有找到才去載入預設的 default.xml。
+                 如果開發者還要使用內建驗證器，就需要將 default.xml 檔案中的驗證器註冊內容複製到 validators.xml 中。  
+   http://3w.eztravel.com.tw:8080/ch05_Struts2.1Validate/form/myValidateFile/userMyValidator.jsp
+   
+   
+   
+ 
+   
